@@ -1,6 +1,8 @@
 package chess;
 
 import java.util.Collection;
+import java.util.List;
+import java.util.Objects;
 
 /**
  * Represents a single chess piece
@@ -37,6 +39,20 @@ public class ChessPiece {
         return pieceColor;
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        ChessPiece that = (ChessPiece) o;
+        return pieceColor == that.pieceColor && type == that.type;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(pieceColor, type);
+    }
+
     /**
      * @return which type of chess piece this piece is
      */
@@ -51,7 +67,25 @@ public class ChessPiece {
      *
      * @return Collection of valid moves
      */
+     /* need to figure out how collection works and how to make other methods
+     that have a list of all the moves each piece can make
+      */
     public Collection<ChessMove> pieceMoves(ChessBoard board, ChessPosition myPosition) {
-        throw new RuntimeException("Not implemented");
+        if (type == PieceType.KING) {
+            return null;
+        } else if (type == PieceType.QUEEN) {
+            return null;
+        } else if (type == PieceType.BISHOP) {
+            return null;
+        } else if (type == PieceType.KNIGHT) {
+            return null;
+        } else if (type == PieceType.ROOK) {
+            return null;
+        } else {
+            return null;
+        }
+
     }
+
+
 }
