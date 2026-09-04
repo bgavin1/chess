@@ -1,5 +1,6 @@
 package chess;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
@@ -67,12 +68,10 @@ public class ChessPiece {
      *
      * @return Collection of valid moves
      */
-     /* need to figure out how collection works and how to make other methods
-     that have a list of all the moves each piece can make
-      */
+
     public Collection<ChessMove> pieceMoves(ChessBoard board, ChessPosition myPosition) {
         if (type == PieceType.KING) {
-            return null;
+            return KingMoves(board, myPosition);
         } else if (type == PieceType.QUEEN) {
             return null;
         } else if (type == PieceType.BISHOP) {
@@ -86,6 +85,35 @@ public class ChessPiece {
         }
 
     }
+    //will need to add logic for if there is a piece in the way
+    private Collection<ChessMove> KingMoves(ChessBoard board, ChessPosition myPosition) {
+        //what will be returned at the end
+        Collection<ChessMove> MovesForKing = new ArrayList<>();
 
+        //list of the coordinates of every direction that the king can move
+        int[][] directions = {{1,0}, {-1,0}, {0,-1}, {0,1}, {1,-1}, {1,1}, {-1,-1}, {-1,1}};
+
+        //iterate through the coordinates and find out if they are on the board or not
+        for (int[] direction : directions) {
+            int newRow = myPosition.getRow() + direction[0];
+            int newCol = myPosition.getColumn() + direction[1];
+            ChessPosition endPosition = new ChessPosition(newRow, newCol);
+            if (isOnBoard(endPosition)) {
+                MovesForKing.add(new ChessMove(myPosition, endPosition, null));
+            }
+        }
+
+        return MovesForKing;
+
+    }
+
+    public boolean isOnBoard(ChessPosition endPosition) {
+        return endPosition.getRow() >= 0 &&
+                endPosition.getColumn() <= 7 &&
+                endPosition.getRow() <= 7 &&
+                endPosition.getColumn() >= 0;
+
+
+    }
 
 }
