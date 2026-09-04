@@ -45,7 +45,10 @@ public class ChessBoard {
      * (How the game of chess normally starts)
      */
     public void resetBoard() {
-        throw new RuntimeException("Not implemented");
 
+        for (int i = 1; i < 9; i++) {
+            ChessPiece Knight = new ChessPiece(ChessGame.TeamColor.WHITE, ChessPiece.PieceType.KNIGHT);
+            addPiece(new ChessPosition(1,i), Knight);
+        }
     }
 }
