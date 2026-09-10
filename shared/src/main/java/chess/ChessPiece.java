@@ -41,6 +41,16 @@ public class ChessPiece {
     }
 
     @Override
+    public String toString() {
+        return "ChessPiece{" +
+                "pieceColor=" + pieceColor +
+                ", type=" + type +
+                '}';
+    }
+
+
+
+    @Override
     public boolean equals(Object o) {
         if (o == null || getClass() != o.getClass()) {
             return false;
@@ -99,7 +109,12 @@ public class ChessPiece {
             int newCol = myPosition.getColumn() + direction[1];
             ChessPosition endPosition = new ChessPosition(newRow, newCol);
             if (isOnBoard(endPosition)) {
-                MovesForKing.add(new ChessMove(myPosition, endPosition, null));
+                //Determine if there is a piece occupying an available spot
+                if (PieceOnSpot(board, endPosition) == null) {
+                    MovesForKing.add(new ChessMove(myPosition, endPosition, null));
+                } else if (!IsMyTeam(board, myPosition, endPosition)) {
+                    MovesForKing.add(new ChessMove(myPosition, endPosition, null));
+                }
             }
         }
 
@@ -108,11 +123,23 @@ public class ChessPiece {
     }
 
     public boolean isOnBoard(ChessPosition endPosition) {
-        return endPosition.getRow() >= 0 &&
-                endPosition.getColumn() <= 7 &&
-                endPosition.getRow() <= 7 &&
-                endPosition.getColumn() >= 0;
+        return endPosition.getRow() >= 1 &&
+                endPosition.getColumn() <= 8 &&
+                endPosition.getRow() <= 8 &&
+                endPosition.getColumn() >= 1;
 
+
+    }
+
+    public ChessPiece PieceOnSpot(ChessBoard MyBoard, ChessPosition endPosition) {
+        return MyBoard.getPiece(endPosition);
+
+    }
+
+    public boolean IsMyTeam(ChessBoard MyBoard, ChessPosition myPosition, ChessPosition endPosition) {
+        ChessPiece MyPiece = MyBoard.getPiece(myPosition);
+        ChessPiece OtherPiece = MyBoard.getPiece(endPosition);
+        return OtherPiece.getTeamColor() == MyPiece.getTeamColor();
 
     }
 
