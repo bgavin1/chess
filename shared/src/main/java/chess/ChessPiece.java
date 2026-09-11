@@ -218,7 +218,12 @@ public class ChessPiece {
         Collection<ChessMove> MovesForPawn = new ArrayList<>();
         ChessPiece myPiece = board.getPiece(myPosition);
 
-        int[][] captureDirections = {{1,1}, {1,-1}};
+        int[][] captureDirections;
+        if (myPiece.getTeamColor() == ChessGame.TeamColor.WHITE) {
+            captureDirections = new int[][] {{1,-1}, {1,1}};
+        } else {
+            captureDirections = new int[][] {{-1,-1}, {-1,1}};
+        }
 
         int direction;
         int startingRow;
@@ -229,16 +234,65 @@ public class ChessPiece {
             direction = -1;
             startingRow = 7;
         }
+
+        int lastRow;
+        if (myPiece.getTeamColor() == ChessGame.TeamColor.WHITE) {
+            lastRow = 8;
+        } else {
+            lastRow = 1;
+        }
+
         int moveTwo = myPosition.getRow() + (direction * 2);
         int newRow = myPosition.getRow() + direction;
         ChessPosition moveTwoEndPosition = new ChessPosition(moveTwo, myPosition.getColumn());
         ChessPosition endPosition = new ChessPosition(newRow, myPosition.getColumn());
 
+        //if this is the pawn's first move, it can move forward two if it wants and it's a valid move
         if (myPosition.getRow() == startingRow) {
-            MovesForPawn.add(new ChessMove(myPosition, endPosition, null));
-            MovesForPawn.add(new ChessMove(myPosition, moveTwoEndPosition, null));
-
+            if (isOnBoard(endPosition)) {
+                if (PieceOnSpot(board, endPosition) == null) {
+                    MovesForPawn.add(new ChessMove(myPosition, endPosition, null));
+                    if (PieceOnSpot(board, moveTwoEndPosition) == null) {
+                        MovesForPawn.add(new ChessMove(myPosition, moveTwoEndPosition, null));
+                    }
+                }
+            }
+        } else {
+            // if this is not the pawn's first move, it can move forward one if it's on the board and a piece isn't there
+            if (isOnBoard(endPosition)) {
+                if (PieceOnSpot(board, endPosition) == null) {
+                    if (endPosition.getRow() == lastRow) {
+                        MovesForPawn.add(new ChessMove(myPosition, endPosition, PieceType.QUEEN));
+                        MovesForPawn.add(new ChessMove(myPosition, endPosition, PieceType.BISHOP));
+                        MovesForPawn.add(new ChessMove(myPosition, endPosition, PieceType.ROOK));
+                        MovesForPawn.add(new ChessMove(myPosition, endPosition, PieceType.KNIGHT));
+                    } else {
+                        MovesForPawn.add(new ChessMove(myPosition, endPosition, null));
+                    }
+                }
+            }
         }
+        //check if there are pieces on either diagonal it can capture
+        for (int[] diagonal : captureDirections) {
+            int diagRow = myPosition.getRow() + diagonal[0];
+            int diagCol = myPosition.getColumn() + diagonal[1];
+            ChessPosition diagPosition = new ChessPosition(diagRow, diagCol);
+            if (isOnBoard(diagPosition)) {
+                if (PieceOnSpot(board, diagPosition) != null) {
+                    if (!IsMyTeam(board, myPosition, diagPosition)) {
+                        if (diagPosition.getRow() == lastRow) {
+                            MovesForPawn.add(new ChessMove(myPosition, diagPosition, PieceType.QUEEN));
+                            MovesForPawn.add(new ChessMove(myPosition, diagPosition, PieceType.BISHOP));
+                            MovesForPawn.add(new ChessMove(myPosition, diagPosition, PieceType.ROOK));
+                            MovesForPawn.add(new ChessMove(myPosition, diagPosition, PieceType.KNIGHT));
+                        } else {
+                            MovesForPawn.add(new ChessMove(myPosition, diagPosition, null));
+                        }
+                    }
+                }
+            }
+        }
+
 
 
         return MovesForPawn;
