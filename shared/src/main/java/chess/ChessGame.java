@@ -9,7 +9,7 @@ import java.util.Collection;
  * signature of the existing methods.
  */
 public class ChessGame {
-
+    TeamColor ThisTurn = null;
     public ChessGame() {
 
     }
@@ -18,7 +18,7 @@ public class ChessGame {
      * @return Which team's turn it is
      */
     public TeamColor getTeamTurn() {
-        throw new RuntimeException("Not implemented");
+        return ThisTurn;
     }
 
     /**
@@ -27,7 +27,14 @@ public class ChessGame {
      * @param team the team whose turn it is
      */
     public void setTeamTurn(TeamColor team) {
-        throw new RuntimeException("Not implemented");
+        TeamColor otherTeam = null;
+        if (team == TeamColor.WHITE) {
+            otherTeam = TeamColor.BLACK;
+        } else {
+            otherTeam = TeamColor.WHITE;
+        }
+        ThisTurn = team;
+
     }
 
     /**
