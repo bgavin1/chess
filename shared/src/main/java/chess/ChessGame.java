@@ -10,11 +10,11 @@ import java.util.Objects;
  * signature of the existing methods.
  */
 public class ChessGame {
-    TeamColor ThisTurn = null;
-    ChessBoard myBoard = null;
+    TeamColor ThisTurn = TeamColor.WHITE;
+    ChessBoard myBoard = new ChessBoard();
 
     public ChessGame() {
-
+        myBoard.resetBoard();
     }
 
     /**
@@ -90,7 +90,18 @@ public class ChessGame {
      * @return True if the specified team is in check
      */
     public boolean isInCheck(TeamColor teamColor) {
-        throw new RuntimeException("Not implemented");
+        //for every spot containing a piece on the other team
+        for (int rowIndex = 0; rowIndex < 8; rowIndex ++) {
+            for (int colIndex = 0; colIndex < 8; colIndex ++) {
+                ChessPiece myPiece = myBoard.getPiece(new ChessPosition(rowIndex+1, colIndex+1));
+                if (myPiece != null) {
+                    if (myPiece.getTeamColor() != teamColor) {
+                        //check movelist
+                    }
+                }
+            }
+        }
+        //is there a move in their move list that would end on my king
     }
 
     /**
