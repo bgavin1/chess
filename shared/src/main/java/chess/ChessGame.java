@@ -1,5 +1,6 @@
 package chess;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Objects;
 
@@ -63,7 +64,68 @@ public class ChessGame {
      * startPosition
      */
     public Collection<ChessMove> validMoves(ChessPosition startPosition) {
-        throw new RuntimeException("Not implemented");
+        ChessPiece myPiece = myBoard.getPiece(startPosition);
+
+
+        if (myPiece == null) {
+            return null;
+        }
+        Collection<ChessMove> moveList = myPiece.pieceMoves(myBoard, startPosition);
+        Collection<ChessMove> finalMoveList = new ArrayList<>();
+
+
+        for (ChessMove move : moveList) {
+            ChessBoard subBoard = new ChessBoard();
+            for (int rowIndex = 0; rowIndex < 8; rowIndex ++) {
+                for (int colIndex = 0; colIndex < 8; colIndex++) {
+                    ChessPiece thisPiece = myBoard.getPiece(new ChessPosition(rowIndex + 1, colIndex + 1));
+                    if (thisPiece != null) {
+                        subBoard.addPiece(new ChessPosition(rowIndex + 1, colIndex + 1), thisPiece);
+                    }
+                }
+            }
+            subBoard.addPiece(move.getEndPosition(), myPiece);
+            subBoard.addPiece(move.getStartPosition(), null);
+            if (!helperIsInCheck(myPiece.getTeamColor(), subBoard)) {
+                finalMoveList.add(move);
+            }
+        }
+        return finalMoveList;
+    }
+
+    public boolean helperIsInCheck(TeamColor teamColor, ChessBoard board) {
+        //find my king
+        ChessPosition myKingPosition = null;
+        for (int rowIndex = 0; rowIndex < 8; rowIndex ++) {
+            for (int colIndex = 0; colIndex < 8; colIndex ++) {
+                ChessPiece thisPiece = board.getPiece(new ChessPosition(rowIndex+1, colIndex+1));
+                if (thisPiece != null) {
+                    if (thisPiece.getTeamColor() == teamColor) {
+                        if (thisPiece.getPieceType() == ChessPiece.PieceType.KING) {
+                            myKingPosition = new ChessPosition(rowIndex+1, colIndex+1);
+                        }
+                    }
+                }
+            }
+        }
+        //for every spot containing a piece on the other team
+        for (int rowIndex = 0; rowIndex < 8; rowIndex ++) {
+            for (int colIndex = 0; colIndex < 8; colIndex ++) {
+                ChessPiece myPiece = board.getPiece(new ChessPosition(rowIndex+1, colIndex+1));
+                if (myPiece != null) {
+                    if (myPiece.getTeamColor() != teamColor) {
+                        //check movelist
+                        Collection<ChessMove> moveList = myPiece.pieceMoves(board, new ChessPosition(rowIndex+1, colIndex+1));
+                        for (ChessMove move : moveList) {
+                            if (move.getEndPosition().equals(myKingPosition)) {
+                                return true;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        return false;
     }
 
     /**
@@ -74,12 +136,29 @@ public class ChessGame {
      */
     public void makeMove(ChessMove move) throws InvalidMoveException {
         ChessPiece myPiece = myBoard.getPiece(move.getStartPosition());
+        if (myPiece == null) {
+            throw new InvalidMoveException("Invalid move.");
+        }
+        if (myPiece.getTeamColor() != ThisTurn) {
+            throw new InvalidMoveException("Invalid move.");
+        }
         Collection<ChessMove> moveList = validMoves(move.getStartPosition());
         if (!moveList.contains(move)) {
             throw new InvalidMoveException("Invalid move.");
         } else {
-            myBoard.addPiece(move.getEndPosition(), myPiece);
-            myBoard.addPiece(move.getStartPosition(), null);
+            if (move.getPromotionPiece() == null) {
+                myBoard.addPiece(move.getEndPosition(), myPiece);
+                myBoard.addPiece(move.getStartPosition(), null);
+            } else {
+                ChessPiece newPiece = new ChessPiece(ThisTurn, move.getPromotionPiece());
+                myBoard.addPiece(move.getEndPosition(), newPiece);
+                myBoard.addPiece(move.getStartPosition(), null);
+            }
+            if (ThisTurn == TeamColor.WHITE) {
+                ThisTurn = TeamColor.BLACK;
+            } else {
+                ThisTurn = TeamColor.WHITE;
+            }
         }
     }
 
@@ -90,6 +169,20 @@ public class ChessGame {
      * @return True if the specified team is in check
      */
     public boolean isInCheck(TeamColor teamColor) {
+        //find my king
+        ChessPosition myKingPosition = null;
+        for (int rowIndex = 0; rowIndex < 8; rowIndex ++) {
+            for (int colIndex = 0; colIndex < 8; colIndex ++) {
+                ChessPiece thisPiece = myBoard.getPiece(new ChessPosition(rowIndex+1, colIndex+1));
+                if (thisPiece != null) {
+                    if (thisPiece.getTeamColor() == teamColor) {
+                        if (thisPiece.getPieceType() == ChessPiece.PieceType.KING) {
+                            myKingPosition = new ChessPosition(rowIndex+1, colIndex+1);
+                        }
+                    }
+                }
+            }
+        }
         //for every spot containing a piece on the other team
         for (int rowIndex = 0; rowIndex < 8; rowIndex ++) {
             for (int colIndex = 0; colIndex < 8; colIndex ++) {
@@ -97,11 +190,17 @@ public class ChessGame {
                 if (myPiece != null) {
                     if (myPiece.getTeamColor() != teamColor) {
                         //check movelist
+                        Collection<ChessMove> moveList = myPiece.pieceMoves(myBoard, new ChessPosition(rowIndex+1, colIndex+1));
+                        for (ChessMove move : moveList) {
+                            if (move.getEndPosition().equals(myKingPosition)) {
+                                return true;
+                            }
+                        }
                     }
                 }
             }
         }
-        //is there a move in their move list that would end on my king
+        return false;
     }
 
     /**
