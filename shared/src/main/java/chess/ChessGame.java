@@ -216,10 +216,10 @@ public class ChessGame {
                     if (myPiece != null) {
                         if (myPiece.getTeamColor() == teamColor) {
                             if (validMoves(new ChessPosition(rowIndex + 1, colIndex + 1)).isEmpty()) {
-                                return true;
+                                checkmate = true;
                             } else {
-                                return false;
-
+                                checkmate = false;
+                                return checkmate;
                             }
                         }
                     }
