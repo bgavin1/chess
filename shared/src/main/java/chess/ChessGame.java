@@ -1,8 +1,6 @@
 package chess;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Objects;
+import java.util.*;
 
 /**
  * A class that can manage a chess game, making moves on a board
@@ -210,7 +208,27 @@ public class ChessGame {
      * @return True if the specified team is in checkmate
      */
     public boolean isInCheckmate(TeamColor teamColor) {
-        throw new RuntimeException("Not implemented");
+        boolean checkmate = true;
+        if (isInCheck(teamColor)) {
+            for (int rowIndex = 0; rowIndex < 8; rowIndex ++) {
+                for (int colIndex = 0; colIndex < 8; colIndex ++) {
+                    ChessPiece myPiece = myBoard.getPiece(new ChessPosition(rowIndex + 1, colIndex + 1));
+                    if (myPiece != null) {
+                        if (myPiece.getTeamColor() == teamColor) {
+                            if (validMoves(new ChessPosition(rowIndex + 1, colIndex + 1)).isEmpty()) {
+                                checkmate = true;
+                            } else {
+                                checkmate = false;
+                                return checkmate;
+                            }
+                        }
+                    }
+                }
+            }
+        } else {
+            checkmate = false;
+        }
+        return checkmate;
     }
 
     /**
@@ -221,7 +239,27 @@ public class ChessGame {
      * @return True if the specified team is in stalemate, otherwise false
      */
     public boolean isInStalemate(TeamColor teamColor) {
-        throw new RuntimeException("Not implemented");
+        boolean stalemate = true;
+        if (!isInCheck(teamColor)) {
+            for (int rowIndex = 0; rowIndex < 8; rowIndex ++) {
+                for (int colIndex = 0; colIndex < 8; colIndex ++) {
+                    ChessPiece myPiece = myBoard.getPiece(new ChessPosition(rowIndex + 1, colIndex + 1));
+                    if (myPiece != null) {
+                        if (myPiece.getTeamColor() == teamColor) {
+                            if (validMoves(new ChessPosition(rowIndex + 1, colIndex + 1)).isEmpty()) {
+                                stalemate = true;
+                            } else {
+                                stalemate = false;
+                                return stalemate;
+                            }
+                        }
+                    }
+                }
+            }
+        } else {
+            stalemate = false;
+        }
+        return stalemate;
     }
 
     /**
