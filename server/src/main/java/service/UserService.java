@@ -16,6 +16,11 @@ public class UserService {
     }
 
     public RegisterResult register(RegisterRequest registerRequest) {
+        if (registerRequest.username() == null || registerRequest.password() == null || registerRequest.email() == null) {
+            throw new BadRequestException("Error: bad request");
+        }
+
+
         if (userObject.getUser(registerRequest.username()) == null) {
             UserData newUserObject = new UserData(registerRequest.username(), registerRequest.password(), registerRequest.email());
             userObject.createUser(newUserObject);
@@ -23,22 +28,26 @@ public class UserService {
             AuthData myAuth = authObject.createAuth(registerRequest.username());
             return new RegisterResult(registerRequest.username(), myAuth.authToken());
         } else {
-            //throw AlreadyTakenException;
+            throw new AlreadyTakenException("Error: already taken");
         }
     }
 
 
     public LoginResult login(LoginRequest loginRequest) {
+        if (loginRequest.username() == null || loginRequest.password() == null) {
+            throw new BadRequestException("Error: bad request");
+        }
+
         UserData newUserObject = userObject.getUser(loginRequest.username());
         if (newUserObject != null) {
             if (newUserObject.password().equals(loginRequest.password())) {
                 AuthData myAuth = authObject.createAuth(loginRequest.username());
                 return new LoginResult(loginRequest.username(), myAuth.authToken());
             } else {
-               // throw unauthorized exception or something like incorrect password
+               throw new UnauthorizedException("Error: unauthorized");
             }
         } else {
-            // throw exception
+            throw new UnauthorizedException("Error: unauthorized");
         }
     }
 
@@ -47,7 +56,7 @@ public class UserService {
         if (authObject.getAuth(logoutRequest.authToken()) != null) {
             authObject.deleteAuth(logoutRequest.authToken());
         } else {
-            //throw exception
+            throw new UnauthorizedException("Error: unauthorized");
         }
     }
 

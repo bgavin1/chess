@@ -32,26 +32,40 @@ public class GameService {
             }
             return new ListGamesResult(myList);
         } else {
-            //throw exception
+            throw new UnauthorizedException("Error: unauthorized");
         }
     }
 
     public CreateGameResult createGame(CreateGameRequest createGameRequest) {
+        if (createGameRequest.gameName() == null) {
+            throw new BadRequestException("Error: bad request");
+        }
+        if (createGameRequest.authToken() == null) {
+            throw new UnauthorizedException("Error: unauthorized");
+        }
+
+
         AuthData newAuthObject = authObject.getAuth(createGameRequest.authToken());
 
         if (newAuthObject != null) {
-            if (createGameRequest.gameName() != null && createGameRequest.gameName().isBlank()) {
+            if (!createGameRequest.gameName().isBlank()) {
                 GameData newGame = gameObject.createGame(createGameRequest.gameName());
                 return new CreateGameResult(newGame.gameID());
             } else {
-                //throw exception
+                throw new BadRequestException("Error: bad request");
             }
         } else {
-            //throw exception
+            throw new UnauthorizedException("Error: unauthorized");
         }
     }
 
     public void joinGame(JoinGameRequest joinGameRequest) {
+        if (joinGameRequest.playerColor() == null || joinGameRequest.gameID() == null) {
+            throw new BadRequestException("Error: bad request");
+        }
+        if (joinGameRequest.authToken() == null) {
+            throw new UnauthorizedException("Error: unauthorized");
+        }
         AuthData newAuthObject = authObject.getAuth(joinGameRequest.authToken());
 
         if (newAuthObject != null) {
@@ -63,23 +77,23 @@ public class GameService {
                         GameData newGame = new GameData(myGame.gameID(), newAuthObject.username(), myGame.blackUsername(), myGame.gameName(), myGame.game());
                         gameObject.updateGame(newGame);
                     } else {
-                        //throw already taken exception
+                        throw new AlreadyTakenException("Error: already taken");
                     }
                 } else if ("BLACK".equals(joinGameRequest.playerColor())){
                     if (myGame.blackUsername() == null) {
                         GameData newGame = new GameData(myGame.gameID(), myGame.whiteUsername(), newAuthObject.username(), myGame.gameName(), myGame.game());
                         gameObject.updateGame(newGame);
                     } else {
-                        //throw already taken exception
+                        throw new AlreadyTakenException("Error: already taken");
                     }
                 } else {
-                    //throw incorrect color exception
+                    throw new BadRequestException("Error: bad request");
                 }
             } else {
-                //throw game doesn't exist exception
+                throw new BadRequestException("Error: bad request");
             }
         } else {
-            //throw unauthorized exception
+            throw new UnauthorizedException("Error: unauthorized");
         }
     }
 
