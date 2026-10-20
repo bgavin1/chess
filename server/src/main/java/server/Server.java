@@ -5,6 +5,9 @@ import io.javalin.*;
 import service.*;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
+import service.exceptions.AlreadyTakenException;
+import service.exceptions.BadRequestException;
+import service.exceptions.UnauthorizedException;
 
 import java.util.Map;
 
@@ -60,7 +63,11 @@ public class Server {
 
         javalin.post("/game", ctx -> {
             JsonObject body = new Gson().fromJson(ctx.body(), JsonObject.class);
-            String gameName = body.get("gameName").getAsString();
+
+            String gameName = null;
+            if (body.get("gameName") != null && !body.get("gameName").isJsonNull()) {
+                gameName = body.get("gameName").getAsString();
+            }
             String authToken = ctx.header("Authorization");
             CreateGameRequest createGameRequest = new CreateGameRequest(gameName, authToken);
             CreateGameResult result = gameService.createGame(createGameRequest);
@@ -69,8 +76,16 @@ public class Server {
 
         javalin.put("/game", ctx -> {
             JsonObject body = new Gson().fromJson(ctx.body(), JsonObject.class);
-            String playerColor = body.get("playerColor").getAsString();
-            int gameID = body.get("gameID").getAsInt();
+
+            String playerColor = null;
+            if (body.get("playerColor") != null && !body.get("playerColor").isJsonNull()) {
+                playerColor = body.get("playerColor").getAsString();
+            }
+
+            Integer gameID = null;
+            if (body.get("gameID") != null && !body.get("gameID").isJsonNull()) {
+                gameID = body.get("gameID").getAsInt();
+            }
             String authToken = ctx.header("Authorization");
             JoinGameRequest joinGameRequest = new JoinGameRequest(playerColor, gameID, authToken);
             gameService.joinGame(joinGameRequest);

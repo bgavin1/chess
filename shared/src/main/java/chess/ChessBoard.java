@@ -67,35 +67,35 @@ public class ChessBoard {
      * (How the game of chess normally starts)
      */
     public void resetBoard() {
-        Collection<ChessPiece> WhiteBackRow = new ArrayList<>();
-        Collection<ChessPiece> BlackBackRow = new ArrayList<>();
+        Collection<ChessPiece> whiteBackRow = new ArrayList<>();
+        Collection<ChessPiece> blackBackRow = new ArrayList<>();
 
-        WhiteBackRow.add(new ChessPiece(ChessGame.TeamColor.WHITE, ChessPiece.PieceType.ROOK));
-        WhiteBackRow.add(new ChessPiece(ChessGame.TeamColor.WHITE, ChessPiece.PieceType.KNIGHT));
-        WhiteBackRow.add(new ChessPiece(ChessGame.TeamColor.WHITE, ChessPiece.PieceType.BISHOP));
-        WhiteBackRow.add(new ChessPiece(ChessGame.TeamColor.WHITE, ChessPiece.PieceType.QUEEN));
-        WhiteBackRow.add(new ChessPiece(ChessGame.TeamColor.WHITE, ChessPiece.PieceType.KING));
-        WhiteBackRow.add(new ChessPiece(ChessGame.TeamColor.WHITE, ChessPiece.PieceType.BISHOP));
-        WhiteBackRow.add(new ChessPiece(ChessGame.TeamColor.WHITE, ChessPiece.PieceType.KNIGHT));
-        WhiteBackRow.add(new ChessPiece(ChessGame.TeamColor.WHITE, ChessPiece.PieceType.ROOK));
+        whiteBackRow.add(new ChessPiece(ChessGame.TeamColor.WHITE, ChessPiece.PieceType.ROOK));
+        whiteBackRow.add(new ChessPiece(ChessGame.TeamColor.WHITE, ChessPiece.PieceType.KNIGHT));
+        whiteBackRow.add(new ChessPiece(ChessGame.TeamColor.WHITE, ChessPiece.PieceType.BISHOP));
+        whiteBackRow.add(new ChessPiece(ChessGame.TeamColor.WHITE, ChessPiece.PieceType.QUEEN));
+        whiteBackRow.add(new ChessPiece(ChessGame.TeamColor.WHITE, ChessPiece.PieceType.KING));
+        whiteBackRow.add(new ChessPiece(ChessGame.TeamColor.WHITE, ChessPiece.PieceType.BISHOP));
+        whiteBackRow.add(new ChessPiece(ChessGame.TeamColor.WHITE, ChessPiece.PieceType.KNIGHT));
+        whiteBackRow.add(new ChessPiece(ChessGame.TeamColor.WHITE, ChessPiece.PieceType.ROOK));
 
-        BlackBackRow.add(new ChessPiece(ChessGame.TeamColor.BLACK, ChessPiece.PieceType.ROOK));
-        BlackBackRow.add(new ChessPiece(ChessGame.TeamColor.BLACK, ChessPiece.PieceType.KNIGHT));
-        BlackBackRow.add(new ChessPiece(ChessGame.TeamColor.BLACK, ChessPiece.PieceType.BISHOP));
-        BlackBackRow.add(new ChessPiece(ChessGame.TeamColor.BLACK, ChessPiece.PieceType.QUEEN));
-        BlackBackRow.add(new ChessPiece(ChessGame.TeamColor.BLACK, ChessPiece.PieceType.KING));
-        BlackBackRow.add(new ChessPiece(ChessGame.TeamColor.BLACK, ChessPiece.PieceType.BISHOP));
-        BlackBackRow.add(new ChessPiece(ChessGame.TeamColor.BLACK, ChessPiece.PieceType.KNIGHT));
-        BlackBackRow.add(new ChessPiece(ChessGame.TeamColor.BLACK, ChessPiece.PieceType.ROOK));
+        blackBackRow.add(new ChessPiece(ChessGame.TeamColor.BLACK, ChessPiece.PieceType.ROOK));
+        blackBackRow.add(new ChessPiece(ChessGame.TeamColor.BLACK, ChessPiece.PieceType.KNIGHT));
+        blackBackRow.add(new ChessPiece(ChessGame.TeamColor.BLACK, ChessPiece.PieceType.BISHOP));
+        blackBackRow.add(new ChessPiece(ChessGame.TeamColor.BLACK, ChessPiece.PieceType.QUEEN));
+        blackBackRow.add(new ChessPiece(ChessGame.TeamColor.BLACK, ChessPiece.PieceType.KING));
+        blackBackRow.add(new ChessPiece(ChessGame.TeamColor.BLACK, ChessPiece.PieceType.BISHOP));
+        blackBackRow.add(new ChessPiece(ChessGame.TeamColor.BLACK, ChessPiece.PieceType.KNIGHT));
+        blackBackRow.add(new ChessPiece(ChessGame.TeamColor.BLACK, ChessPiece.PieceType.ROOK));
 
 
         int col = 1;
-        for (ChessPiece piece : WhiteBackRow) {
+        for (ChessPiece piece : whiteBackRow) {
             addPiece(new ChessPosition(1,col), piece);
             col += 1;
         }
         col = 1;
-        for (ChessPiece piece : BlackBackRow) {
+        for (ChessPiece piece : blackBackRow) {
             int i = 1;
             addPiece(new ChessPosition(8,col), piece);
             col += 1;

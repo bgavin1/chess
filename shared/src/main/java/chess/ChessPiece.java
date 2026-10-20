@@ -2,7 +2,6 @@ package chess;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.List;
 import java.util.Objects;
 
 /**
@@ -81,24 +80,24 @@ public class ChessPiece {
 
     public Collection<ChessMove> pieceMoves(ChessBoard board, ChessPosition myPosition) {
         if (type == PieceType.KING) {
-            return KingMoves(board, myPosition);
+            return kingMoves(board, myPosition);
         } else if (type == PieceType.QUEEN) {
-            return QueenMoves(board, myPosition);
+            return queenMoves(board, myPosition);
         } else if (type == PieceType.BISHOP) {
-            return BishopMoves(board, myPosition);
+            return bishopMoves(board, myPosition);
         } else if (type == PieceType.KNIGHT) {
-            return KnightMoves(board, myPosition);
+            return knightMoves(board, myPosition);
         } else if (type == PieceType.ROOK) {
-            return RookMoves(board, myPosition);
+            return rookMoves(board, myPosition);
         } else {
-            return PawnMoves(board, myPosition);
+            return pawnMoves(board, myPosition);
         }
 
     }
 
-    private Collection<ChessMove> KingMoves(ChessBoard board, ChessPosition myPosition) {
+    private Collection<ChessMove> kingMoves(ChessBoard board, ChessPosition myPosition) {
         //what will be returned at the end
-        Collection<ChessMove> MovesForKing = new ArrayList<>();
+        Collection<ChessMove> movesForKing = new ArrayList<>();
 
         //list of the coordinates of every direction that the king can move
         int[][] directions = {{1,0}, {-1,0}, {0,-1}, {0,1}, {1,-1}, {1,1}, {-1,-1}, {-1,1}};
@@ -111,20 +110,20 @@ public class ChessPiece {
             if (isOnBoard(endPosition)) {
                 //Determine if there is a piece occupying an available spot
                 if (PieceOnSpot(board, endPosition) == null) {
-                    MovesForKing.add(new ChessMove(myPosition, endPosition, null));
+                    movesForKing.add(new ChessMove(myPosition, endPosition, null));
                 } else if (!IsMyTeam(board, myPosition, endPosition)) {
-                    MovesForKing.add(new ChessMove(myPosition, endPosition, null));
+                    movesForKing.add(new ChessMove(myPosition, endPosition, null));
                 }
             }
         }
 
-        return MovesForKing;
+        return movesForKing;
 
     }
 
-    private Collection<ChessMove> BishopMoves(ChessBoard board, ChessPosition myPosition) {
+    private Collection<ChessMove> bishopMoves(ChessBoard board, ChessPosition myPosition) {
         //what will be returned at the end
-        Collection<ChessMove> MovesForBishop = new ArrayList<>();
+        Collection<ChessMove> movesForBishop = new ArrayList<>();
 
         //list of the coordinates of every direction that the bishop can move
         int[][] directions = {{1, -1}, {1, 1}, {-1, -1}, {-1, 1}};
@@ -136,13 +135,13 @@ public class ChessPiece {
                 //while the proposed endpoints are on the board
                 if (PieceOnSpot(board, endPosition) == null) {
                     //if the spot is empty, add it and keep going that same direction
-                    MovesForBishop.add(new ChessMove(myPosition, endPosition, null));
+                    movesForBishop.add(new ChessMove(myPosition, endPosition, null));
                     newRow += direction[0];
                     newCol += direction[1];
                     endPosition = new ChessPosition(newRow, newCol);
                 } else if (!IsMyTeam(board, myPosition, endPosition)) {
                     //if the other team's piece is occupying the space, add the move and be done in that direction
-                    MovesForBishop.add(new ChessMove(myPosition, endPosition, null));
+                    movesForBishop.add(new ChessMove(myPosition, endPosition, null));
                     break;
                 } else {
                     break;
@@ -153,12 +152,12 @@ public class ChessPiece {
         }
 
 
-        return MovesForBishop;
+        return movesForBishop;
     }
 
-    private Collection<ChessMove> KnightMoves(ChessBoard board, ChessPosition myPosition) {
+    private Collection<ChessMove> knightMoves(ChessBoard board, ChessPosition myPosition) {
         //what will be returned at the end
-        Collection<ChessMove> MovesForKnight = new ArrayList<>();
+        Collection<ChessMove> movesForKnight = new ArrayList<>();
 
         //list of the coordinates of every direction that the king can move
         int[][] directions = {{2, 1}, {2, -1}, {-2, 1}, {-2, -1}, {1, -2}, {-1, -2}, {1, 2}, {-1, 2}};
@@ -170,19 +169,19 @@ public class ChessPiece {
             if (isOnBoard(endPosition)) {
                 //Determine if there is a piece occupying an available spot
                 if (PieceOnSpot(board, endPosition) == null) {
-                    MovesForKnight.add(new ChessMove(myPosition, endPosition, null));
+                    movesForKnight.add(new ChessMove(myPosition, endPosition, null));
                 } else if (!IsMyTeam(board, myPosition, endPosition)) {
-                    MovesForKnight.add(new ChessMove(myPosition, endPosition, null));
+                    movesForKnight.add(new ChessMove(myPosition, endPosition, null));
                 }
             }
         }
 
-        return MovesForKnight;
+        return movesForKnight;
     }
 
-    private Collection<ChessMove> QueenMoves(ChessBoard board, ChessPosition myPosition) {
+    private Collection<ChessMove> queenMoves(ChessBoard board, ChessPosition myPosition) {
         //what will be returned at the end
-        Collection<ChessMove> MovesForQueen = new ArrayList<>();
+        Collection<ChessMove> movesForQueen = new ArrayList<>();
 
         //list of the coordinates of every direction that the queen can move
         int[][] directions = {{1, 0}, {-1, 0}, {0, -1}, {0, 1}, {1, -1}, {1, 1}, {-1, -1}, {-1, 1}};
@@ -194,13 +193,13 @@ public class ChessPiece {
             while (isOnBoard(endPosition)) {
                 if (PieceOnSpot(board, endPosition) == null) {
                     //if the spot is empty, add it and keep going that same direction
-                    MovesForQueen.add(new ChessMove(myPosition, endPosition, null));
+                    movesForQueen.add(new ChessMove(myPosition, endPosition, null));
                     newRow += direction[0];
                     newCol += direction[1];
                     endPosition = new ChessPosition(newRow, newCol);
                 } else if (!IsMyTeam(board, myPosition, endPosition)) {
                     //if the other team's piece is occupying the space, add the move and be done in that direction
-                    MovesForQueen.add(new ChessMove(myPosition, endPosition, null));
+                    movesForQueen.add(new ChessMove(myPosition, endPosition, null));
                     break;
                 } else {
                     break;
@@ -210,12 +209,12 @@ public class ChessPiece {
 
         }
 
-        return MovesForQueen;
+        return movesForQueen;
     }
 
-    private Collection<ChessMove> PawnMoves(ChessBoard board, ChessPosition myPosition) {
+    private Collection<ChessMove> pawnMoves(ChessBoard board, ChessPosition myPosition) {
         //what will be returned at the end
-        Collection<ChessMove> MovesForPawn = new ArrayList<>();
+        Collection<ChessMove> movesForPawn = new ArrayList<>();
         ChessPiece myPiece = board.getPiece(myPosition);
 
         int[][] captureDirections;
@@ -251,9 +250,9 @@ public class ChessPiece {
         if (myPosition.getRow() == startingRow) {
             if (isOnBoard(endPosition)) {
                 if (PieceOnSpot(board, endPosition) == null) {
-                    MovesForPawn.add(new ChessMove(myPosition, endPosition, null));
+                    movesForPawn.add(new ChessMove(myPosition, endPosition, null));
                     if (PieceOnSpot(board, moveTwoEndPosition) == null) {
-                        MovesForPawn.add(new ChessMove(myPosition, moveTwoEndPosition, null));
+                        movesForPawn.add(new ChessMove(myPosition, moveTwoEndPosition, null));
                     }
                 }
             }
@@ -262,12 +261,12 @@ public class ChessPiece {
             if (isOnBoard(endPosition)) {
                 if (PieceOnSpot(board, endPosition) == null) {
                     if (endPosition.getRow() == lastRow) {
-                        MovesForPawn.add(new ChessMove(myPosition, endPosition, PieceType.QUEEN));
-                        MovesForPawn.add(new ChessMove(myPosition, endPosition, PieceType.BISHOP));
-                        MovesForPawn.add(new ChessMove(myPosition, endPosition, PieceType.ROOK));
-                        MovesForPawn.add(new ChessMove(myPosition, endPosition, PieceType.KNIGHT));
+                        movesForPawn.add(new ChessMove(myPosition, endPosition, PieceType.QUEEN));
+                        movesForPawn.add(new ChessMove(myPosition, endPosition, PieceType.BISHOP));
+                        movesForPawn.add(new ChessMove(myPosition, endPosition, PieceType.ROOK));
+                        movesForPawn.add(new ChessMove(myPosition, endPosition, PieceType.KNIGHT));
                     } else {
-                        MovesForPawn.add(new ChessMove(myPosition, endPosition, null));
+                        movesForPawn.add(new ChessMove(myPosition, endPosition, null));
                     }
                 }
             }
@@ -281,12 +280,12 @@ public class ChessPiece {
                 if (PieceOnSpot(board, diagPosition) != null) {
                     if (!IsMyTeam(board, myPosition, diagPosition)) {
                         if (diagPosition.getRow() == lastRow) {
-                            MovesForPawn.add(new ChessMove(myPosition, diagPosition, PieceType.QUEEN));
-                            MovesForPawn.add(new ChessMove(myPosition, diagPosition, PieceType.BISHOP));
-                            MovesForPawn.add(new ChessMove(myPosition, diagPosition, PieceType.ROOK));
-                            MovesForPawn.add(new ChessMove(myPosition, diagPosition, PieceType.KNIGHT));
+                            movesForPawn.add(new ChessMove(myPosition, diagPosition, PieceType.QUEEN));
+                            movesForPawn.add(new ChessMove(myPosition, diagPosition, PieceType.BISHOP));
+                            movesForPawn.add(new ChessMove(myPosition, diagPosition, PieceType.ROOK));
+                            movesForPawn.add(new ChessMove(myPosition, diagPosition, PieceType.KNIGHT));
                         } else {
-                            MovesForPawn.add(new ChessMove(myPosition, diagPosition, null));
+                            movesForPawn.add(new ChessMove(myPosition, diagPosition, null));
                         }
                     }
                 }
@@ -295,12 +294,12 @@ public class ChessPiece {
 
 
 
-        return MovesForPawn;
+        return movesForPawn;
     }
 
-    private Collection<ChessMove> RookMoves(ChessBoard board, ChessPosition myPosition) {
+    private Collection<ChessMove> rookMoves(ChessBoard board, ChessPosition myPosition) {
         //what will be returned at the end
-        Collection<ChessMove> MovesForRook = new ArrayList<>();
+        Collection<ChessMove> movesForRook = new ArrayList<>();
 
         //list of the coordinates of every direction that the king can move
         int[][] directions = {{1, 0}, {-1, 0}, {0, -1}, {0, 1}};
@@ -312,13 +311,13 @@ public class ChessPiece {
             while (isOnBoard(endPosition)) {
                 if (PieceOnSpot(board, endPosition) == null) {
                     //if the spot is empty, add it and keep going that same direction
-                    MovesForRook.add(new ChessMove(myPosition, endPosition, null));
+                    movesForRook.add(new ChessMove(myPosition, endPosition, null));
                     newRow += direction[0];
                     newCol += direction[1];
                     endPosition = new ChessPosition(newRow, newCol);
                 } else if (!IsMyTeam(board, myPosition, endPosition)) {
                     //if the other team's piece is occupying the space, add the move and be done in that direction
-                    MovesForRook.add(new ChessMove(myPosition, endPosition, null));
+                    movesForRook.add(new ChessMove(myPosition, endPosition, null));
                     break;
                 } else {
                     break;
@@ -329,7 +328,7 @@ public class ChessPiece {
         }
 
 
-        return MovesForRook;
+        return movesForRook;
     }
 
     public boolean isOnBoard(ChessPosition endPosition) {
@@ -347,9 +346,9 @@ public class ChessPiece {
     }
 
     public boolean IsMyTeam(ChessBoard MyBoard, ChessPosition myPosition, ChessPosition endPosition) {
-        ChessPiece MyPiece = MyBoard.getPiece(myPosition);
-        ChessPiece OtherPiece = MyBoard.getPiece(endPosition);
-        return OtherPiece.getTeamColor() == MyPiece.getTeamColor();
+        ChessPiece myPiece = MyBoard.getPiece(myPosition);
+        ChessPiece otherPiece = MyBoard.getPiece(endPosition);
+        return otherPiece.getTeamColor() == myPiece.getTeamColor();
 
     }
 
