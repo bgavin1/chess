@@ -345,9 +345,9 @@ public class ChessPiece {
 
     }
 
-    public boolean isMyTeam(ChessBoard MyBoard, ChessPosition myPosition, ChessPosition endPosition) {
-        ChessPiece myPiece = MyBoard.getPiece(myPosition);
-        ChessPiece otherPiece = MyBoard.getPiece(endPosition);
+    public boolean isMyTeam(ChessBoard myBoard, ChessPosition myPosition, ChessPosition endPosition) {
+        ChessPiece myPiece = myBoard.getPiece(myPosition);
+        ChessPiece otherPiece = myBoard.getPiece(endPosition);
         return otherPiece.getTeamColor() == myPiece.getTeamColor();
 
     }
