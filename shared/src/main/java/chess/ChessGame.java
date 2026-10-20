@@ -252,7 +252,9 @@ public class ChessGame {
             for (int rowIndex = 0; rowIndex < 8; rowIndex ++) {
                 for (int colIndex = 0; colIndex < 8; colIndex ++) {
                     ChessPiece myPiece = myBoard.getPiece(new ChessPosition(rowIndex + 1, colIndex + 1));
-                    if (myPiece != null) {
+                    if (myPiece == null) {
+                        continue;
+                    }
                         if (myPiece.getTeamColor() == teamColor) {
                             if (validMoves(new ChessPosition(rowIndex + 1, colIndex + 1)).isEmpty()) {
                                 stalemate = true;
@@ -263,7 +265,6 @@ public class ChessGame {
                         }
                     }
                 }
-            }
         return stalemate;
     }
 
