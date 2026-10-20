@@ -9,7 +9,7 @@ import java.util.*;
  * signature of the existing methods.
  */
 public class ChessGame {
-    TeamColor ThisTurn = TeamColor.WHITE;
+    TeamColor thisTurn = TeamColor.WHITE;
     ChessBoard myBoard = new ChessBoard();
 
     public ChessGame() {
@@ -20,7 +20,7 @@ public class ChessGame {
      * @return Which team's turn it is
      */
     public TeamColor getTeamTurn() {
-        return ThisTurn;
+        return thisTurn;
     }
 
     /**
@@ -29,7 +29,7 @@ public class ChessGame {
      * @param team the team whose turn it is
      */
     public void setTeamTurn(TeamColor team) {
-        ThisTurn = team;
+        thisTurn = team;
     }
 
     @Override
@@ -38,12 +38,12 @@ public class ChessGame {
             return false;
         }
         ChessGame chessGame = (ChessGame) o;
-        return ThisTurn == chessGame.ThisTurn && Objects.equals(myBoard, chessGame.myBoard);
+        return thisTurn == chessGame.thisTurn && Objects.equals(myBoard, chessGame.myBoard);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(ThisTurn, myBoard);
+        return Objects.hash(thisTurn, myBoard);
     }
 
     /**
@@ -137,7 +137,7 @@ public class ChessGame {
         if (myPiece == null) {
             throw new InvalidMoveException("Invalid move.");
         }
-        if (myPiece.getTeamColor() != ThisTurn) {
+        if (myPiece.getTeamColor() != thisTurn) {
             throw new InvalidMoveException("Invalid move.");
         }
         Collection<ChessMove> moveList = validMoves(move.getStartPosition());
@@ -148,14 +148,14 @@ public class ChessGame {
                 myBoard.addPiece(move.getEndPosition(), myPiece);
                 myBoard.addPiece(move.getStartPosition(), null);
             } else {
-                ChessPiece newPiece = new ChessPiece(ThisTurn, move.getPromotionPiece());
+                ChessPiece newPiece = new ChessPiece(thisTurn, move.getPromotionPiece());
                 myBoard.addPiece(move.getEndPosition(), newPiece);
                 myBoard.addPiece(move.getStartPosition(), null);
             }
-            if (ThisTurn == TeamColor.WHITE) {
-                ThisTurn = TeamColor.BLACK;
+            if (thisTurn == TeamColor.WHITE) {
+                thisTurn = TeamColor.BLACK;
             } else {
-                ThisTurn = TeamColor.WHITE;
+                thisTurn = TeamColor.WHITE;
             }
         }
     }
