@@ -75,14 +75,22 @@ public class GameService {
             if (myGame != null) {
                 if ("WHITE".equals(joinGameRequest.playerColor())) {
                     if (myGame.whiteUsername() == null) {
-                        GameData newGame = new GameData(myGame.gameID(), newAuthObject.username(), myGame.blackUsername(), myGame.gameName(), myGame.game());
+                        GameData newGame = new GameData(myGame.gameID(),
+                                newAuthObject.username(),
+                                myGame.blackUsername(),
+                                myGame.gameName(),
+                                myGame.game());
                         gameObject.updateGame(newGame);
                     } else {
                         throw new AlreadyTakenException("Error: already taken");
                     }
                 } else if ("BLACK".equals(joinGameRequest.playerColor())){
                     if (myGame.blackUsername() == null) {
-                        GameData newGame = new GameData(myGame.gameID(), myGame.whiteUsername(), newAuthObject.username(), myGame.gameName(), myGame.game());
+                        GameData newGame = new GameData(myGame.gameID(),
+                                myGame.whiteUsername(),
+                                newAuthObject.username(),
+                                myGame.gameName(),
+                                myGame.game());
                         gameObject.updateGame(newGame);
                     } else {
                         throw new AlreadyTakenException("Error: already taken");
