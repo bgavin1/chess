@@ -4,6 +4,7 @@ import dataaccess.*;
 import io.javalin.*;
 import service.*;
 import com.google.gson.Gson;
+import com.google.gson.JsonObject;
 
 import java.util.Map;
 
@@ -23,6 +24,14 @@ public class Server {
         gameService = new GameService(memoryGameDAO, memoryAuthDAO);
 
         // Register your endpoints and exception handlers here.
+        javalin.delete("/db", ctx -> {
+            memoryUserDAO.clear();
+            memoryGameDAO.clear();
+            memoryAuthDAO.clear();
+            ctx.result("{}");
+        });
+
+
         javalin.post("/user", ctx -> {
             RegisterRequest registerRequest = new Gson().fromJson(ctx.body(), RegisterRequest.class);
             RegisterResult result = userService.register(registerRequest);
@@ -36,25 +45,34 @@ public class Server {
         });
 
         javalin.delete("/session", ctx -> {
-            LogoutRequest logoutRequest = new Gson().fromJson(ctx.body(), LogoutRequest.class);
+            String authToken = ctx.header("Authorization");
+            LogoutRequest logoutRequest = new LogoutRequest(authToken);
             userService.logout(logoutRequest);
             ctx.result("{}");
         });
 
         javalin.get("/game", ctx -> {
-            ListGamesRequest listGamesRequest = new Gson().fromJson(ctx.body(), ListGamesRequest.class);
+            String authToken = ctx.header("Authorization");
+            ListGamesRequest listGamesRequest = new ListGamesRequest(authToken);
             ListGamesResult result = gameService.listGames(listGamesRequest);
             ctx.result(new Gson().toJson(result));
         });
 
         javalin.post("/game", ctx -> {
-            CreateGameRequest createGameRequest = new Gson().fromJson(ctx.body(), CreateGameRequest.class);
+            JsonObject body = new Gson().fromJson(ctx.body(), JsonObject.class);
+            String gameName = body.get("gameName").getAsString();
+            String authToken = ctx.header("Authorization");
+            CreateGameRequest createGameRequest = new CreateGameRequest(gameName, authToken);
             CreateGameResult result = gameService.createGame(createGameRequest);
             ctx.result(new Gson().toJson(result));
         });
 
         javalin.put("/game", ctx -> {
-            JoinGameRequest joinGameRequest = new Gson().fromJson(ctx.body(), JoinGameRequest.class);
+            JsonObject body = new Gson().fromJson(ctx.body(), JsonObject.class);
+            String playerColor = body.get("playerColor").getAsString();
+            int gameID = body.get("gameID").getAsInt();
+            String authToken = ctx.header("Authorization");
+            JoinGameRequest joinGameRequest = new JoinGameRequest(playerColor, gameID, authToken);
             gameService.joinGame(joinGameRequest);
             ctx.result("{}");
         });
