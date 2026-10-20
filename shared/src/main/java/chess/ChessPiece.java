@@ -276,7 +276,9 @@ public class ChessPiece {
             int diagRow = myPosition.getRow() + diagonal[0];
             int diagCol = myPosition.getColumn() + diagonal[1];
             ChessPosition diagPosition = new ChessPosition(diagRow, diagCol);
-            if (isOnBoard(diagPosition)) {
+            if (!isOnBoard(diagPosition)) {
+                continue;
+            }
                 if (pieceOnSpot(board, diagPosition) != null) {
                     if (!isMyTeam(board, myPosition, diagPosition)) {
                         if (diagPosition.getRow() == lastRow) {
@@ -290,7 +292,6 @@ public class ChessPiece {
                     }
                 }
             }
-        }
 
 
 
