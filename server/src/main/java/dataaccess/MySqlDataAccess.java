@@ -25,7 +25,7 @@ public class MySqlDataAccess {
                         whiteusername VARCHAR(255),
                     blackusername VARCHAR(255),
                     gamename VARCHAR(255) NOT NULL,
-                    game JSON NOT NULL
+                    gameobject JSON NOT NULL
                 )
                 """);
         }

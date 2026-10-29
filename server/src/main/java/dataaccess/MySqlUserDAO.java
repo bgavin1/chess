@@ -4,7 +4,7 @@ import model.UserData;
 
 import java.sql.SQLException;
 
-public class MySqlUserDAO implements UserDAO{
+public class MySqlUserDAO implements UserDAO {
     String insertSql = """
             INSERT INTO users (username, password, email)
             VALUES (?, ?, ?)
