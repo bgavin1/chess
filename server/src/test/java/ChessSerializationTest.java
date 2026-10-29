@@ -3,9 +3,8 @@ import chess.ChessMove;
 import chess.ChessPosition;
 import chess.InvalidMoveException;
 import com.google.gson.Gson;
-import dataaccess.MySqlDataAccess;
+import sql.MySqlDataAccess;
 import org.junit.jupiter.api.Test;
-import chess.InvalidMoveException;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;

@@ -1,7 +1,10 @@
-package dataaccess;
+package sql;
 
 import chess.ChessGame;
 import com.google.gson.Gson;
+import dataaccess.DataAccessException;
+import dataaccess.DatabaseManager;
+import dataaccess.GameDAO;
 import model.GameData;
 
 
@@ -140,6 +143,7 @@ public class MySqlGameDAO implements GameDAO {
 
     @Override
     public Collection<GameData> listGames() {
+        games.clear();
         try (var conn = DatabaseManager.getConnection();
              var statement = conn.prepareStatement(listSql)) {
 
