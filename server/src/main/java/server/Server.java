@@ -9,6 +9,7 @@ import service.exceptions.AlreadyTakenException;
 import service.exceptions.BadRequestException;
 import service.exceptions.UnauthorizedException;
 
+import java.sql.SQLException;
 import java.util.Map;
 
 public class Server {
@@ -16,21 +17,26 @@ public class Server {
     private final Javalin javalin;
     private final UserService userService;
     private final GameService gameService;
-    private final MemoryGameDAO memoryGameDAO = new MemoryGameDAO();
-    private final MemoryUserDAO memoryUserDAO = new MemoryUserDAO();
-    private final MemoryAuthDAO memoryAuthDAO = new MemoryAuthDAO();
+    private final MySqlGameDAO mySqlGameDAO = new MySqlGameDAO();
+    private final MySqlUserDAO mySqlUserDAO = new MySqlUserDAO();
+    private final MySqlAuthDAO mySqlAuthDAO = new MySqlAuthDAO();
 
 
     public Server() {
+        try {
+            new MySqlDataAccess();
+        } catch (DataAccessException | SQLException e) {
+            throw new RuntimeException("Failed to initialize database", e);
+        }
         javalin = Javalin.create(config -> config.staticFiles.add("web"));
-        userService = new UserService(memoryUserDAO, memoryAuthDAO);
-        gameService = new GameService(memoryGameDAO, memoryAuthDAO);
+        userService = new UserService(mySqlUserDAO, mySqlAuthDAO);
+        gameService = new GameService(mySqlGameDAO, mySqlAuthDAO);
 
         // Register your endpoints and exception handlers here.
         javalin.delete("/db", ctx -> {
-            memoryUserDAO.clear();
-            memoryGameDAO.clear();
-            memoryAuthDAO.clear();
+            mySqlUserDAO.clear();
+            mySqlGameDAO.clear();
+            mySqlAuthDAO.clear();
             ctx.result("{}");
         });
 

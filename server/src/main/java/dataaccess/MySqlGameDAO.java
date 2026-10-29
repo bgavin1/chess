@@ -25,7 +25,7 @@ public class MySqlGameDAO implements GameDAO {
             """;
 
     String updateSql = """
-            UPDATE game SET gameobject = ? WHERE gameid = ?
+            UPDATE game SET whiteusername = ?, blackusername = ?, gameobject = ? WHERE gameid = ?
             """;
 
     String getSql = """
@@ -62,8 +62,10 @@ public class MySqlGameDAO implements GameDAO {
 
             statement.executeUpdate();
         } catch (SQLException e) {
+            e.printStackTrace();
             throw new RuntimeException(e);
         } catch (DataAccessException e) {
+            e.printStackTrace();
             throw new RuntimeException(e);
         }
         GameData newGame = new GameData(gameID, null, null, gameName, myGame);
@@ -96,8 +98,10 @@ public class MySqlGameDAO implements GameDAO {
                 Integer gameID = game.gameID();
                 Gson gson = new Gson();
                 String json = gson.toJson(game.game());
-                statement.setString(1, json);
-                statement.setInt(2, gameID);
+                statement.setString(1, game.whiteUsername());
+                statement.setString(2, game.blackUsername());
+                statement.setString(3, json);
+                statement.setInt(4, gameID);
 
                 statement.executeUpdate();
         } catch (SQLException e) {
@@ -151,8 +155,10 @@ public class MySqlGameDAO implements GameDAO {
                     }
                 }
         } catch (SQLException e) {
+            e.printStackTrace();
             throw new RuntimeException(e);
         } catch (DataAccessException e) {
+            e.printStackTrace();
             throw new RuntimeException(e);
         }
         return games.values();

@@ -32,8 +32,10 @@ public class MySqlAuthDAO implements AuthDAO {
 
             statement.executeUpdate();
         } catch (SQLException e) {
+            e.printStackTrace();
             throw new RuntimeException(e);
         } catch (DataAccessException e) {
+            e.printStackTrace();
             throw new RuntimeException(e);
         }
 
@@ -95,4 +97,3 @@ public class MySqlAuthDAO implements AuthDAO {
 
 
 
-}

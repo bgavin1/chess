@@ -4,6 +4,7 @@ import dataaccess.AuthDAO;
 import dataaccess.UserDAO;
 import model.AuthData;
 import model.UserData;
+import org.mindrot.jbcrypt.BCrypt;
 import service.exceptions.AlreadyTakenException;
 import service.exceptions.BadRequestException;
 import service.exceptions.UnauthorizedException;
@@ -25,6 +26,7 @@ public class UserService {
 
         if (userObject.getUser(registerRequest.username()) == null) {
             UserData newUserObject = new UserData(registerRequest.username(), registerRequest.password(), registerRequest.email());
+            System.out.println(userObject.getClass().getName());
             userObject.createUser(newUserObject);
 
             AuthData myAuth = authObject.createAuth(registerRequest.username());
@@ -42,7 +44,7 @@ public class UserService {
 
         UserData newUserObject = userObject.getUser(loginRequest.username());
         if (newUserObject != null) {
-            if (newUserObject.password().equals(loginRequest.password())) {
+            if (BCrypt.checkpw(loginRequest.password(), newUserObject.password())) {
                 AuthData myAuth = authObject.createAuth(loginRequest.username());
                 return new LoginResult(loginRequest.username(), myAuth.authToken());
             } else {

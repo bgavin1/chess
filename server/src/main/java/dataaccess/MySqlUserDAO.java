@@ -1,6 +1,7 @@
 package dataaccess;
 
 import model.UserData;
+import org.mindrot.jbcrypt.BCrypt;
 
 import java.sql.SQLException;
 
@@ -21,16 +22,21 @@ DELETE FROM users
 
     @Override
     public boolean createUser(UserData user) {
+        String hashedPassword = BCrypt.hashpw(user.password(), BCrypt.gensalt());
         try (var conn = DatabaseManager.getConnection();
              var statement = conn.prepareStatement(insertSql)) {
             statement.setString(1, user.username());
-            statement.setString(2, user.password());
+            statement.setString(2, hashedPassword);
             statement.setString(3, user.email());
 
             statement.executeUpdate();
         } catch (SQLException e) {
+            System.out.println("User insert failed");
+            e.printStackTrace();
             return false;
         } catch (DataAccessException e) {
+            System.out.println("User insert failed");
+            e.printStackTrace();
             return false;
         }
         return true;
