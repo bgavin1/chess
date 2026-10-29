@@ -3,7 +3,7 @@ package dataaccess;
 import chess.ChessGame;
 import com.google.gson.Gson;
 import model.GameData;
-import model.UserData;
+
 
 import java.sql.SQLException;
 import java.util.Collection;
@@ -11,7 +11,6 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Random;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class MySqlGameDAO implements GameDAO {
     private final Map<Integer, GameData> games = new HashMap<>();
