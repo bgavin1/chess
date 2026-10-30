@@ -9,10 +9,10 @@ import passoff.model.TestUser;
 import passoff.server.TestServerFacade;
 import server.Server;
 import sql.MySqlGameDAO;
-import dataaccess.DataAccessException;
+import java.lang.reflect.Field;
 import dataaccess.DatabaseManager;
-import org.mockito.MockedStatic;
-import org.mockito.Mockito;
+import dataaccess.DataAccessException;
+
 
 import java.util.Collection;
 
@@ -117,51 +117,68 @@ public class MySqlGameDAOTest {private static final TestUser TEST_USER = new Tes
     }
 
     @Test
-    void testCreateGameDataAccessException() {
+    void testCreateGameDataAccessException() throws Exception {
         MySqlGameDAO gameDAO = new MySqlGameDAO();
 
-        try (MockedStatic<DatabaseManager> mocked =
-                     Mockito.mockStatic(DatabaseManager.class)) {
+        Field urlField = DatabaseManager.class.getDeclaredField("connectionUrl");
+        urlField.setAccessible(true);
 
-            mocked.when(DatabaseManager::getConnection)
-                    .thenThrow(new DataAccessException("Connection failed"));
+        String originalUrl = (String) urlField.get(null);
+
+        try {
+            urlField.set(null, "jdbc:mysql://localhost:3307");
 
             assertThrows(RuntimeException.class,
                     () -> gameDAO.createGame("Test Game"));
+
+        } finally {
+            urlField.set(null, originalUrl);
         }
     }
 
-        @Test
-        void testUpdateGameDataAccessException() {
-            MySqlGameDAO gameDAO = new MySqlGameDAO();
-            GameData game = null;
+    @Test
+    void testUpdateGameDataAccessException() throws Exception {
+        MySqlGameDAO gameDAO = new MySqlGameDAO();
+        GameData game = null;
 
-            try (MockedStatic<DatabaseManager> mocked =
-                         Mockito.mockStatic(DatabaseManager.class)) {
+        Field urlField = DatabaseManager.class.getDeclaredField("connectionUrl");
+        urlField.setAccessible(true);
 
-                mocked.when(DatabaseManager::getConnection)
-                        .thenThrow(new DataAccessException("Connection failed"));
+        String originalUrl = (String) urlField.get(null);
 
-                assertThrows(RuntimeException.class,
-                        () -> gameDAO.updateGame(game));
-            }
+        try {
+            urlField.set(null, "jdbc:mysql://localhost:3307");
+
+            assertThrows(RuntimeException.class,
+                    () -> gameDAO.updateGame(game));
+
+        } finally {
+            urlField.set(null, originalUrl);
         }
+    }
 
     @Test
-    void testGetGameDataAccessException() {
+    void testGetGameDataAccessException() throws Exception {
         MySqlGameDAO gameDAO = new MySqlGameDAO();
         Integer gameID = null;
 
-        try (MockedStatic<DatabaseManager> mocked =
-                     Mockito.mockStatic(DatabaseManager.class)) {
+        Field urlField = DatabaseManager.class.getDeclaredField("connectionUrl");
+        urlField.setAccessible(true);
 
-            mocked.when(DatabaseManager::getConnection)
-                    .thenThrow(new DataAccessException("Connection failed"));
+        String originalUrl = (String) urlField.get(null);
+
+        try {
+            urlField.set(null, "jdbc:mysql://localhost:3307");
 
             assertThrows(RuntimeException.class,
                     () -> gameDAO.getGame(gameID));
+
+        } finally {
+            urlField.set(null, originalUrl);
         }
     }
+
+
 
 
 }

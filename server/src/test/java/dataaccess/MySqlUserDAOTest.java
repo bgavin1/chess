@@ -10,10 +10,10 @@ import passoff.model.TestUser;
 import passoff.server.TestServerFacade;
 import server.Server;
 import sql.MySqlUserDAO;
-import dataaccess.DataAccessException;
+import java.lang.reflect.Field;
 import dataaccess.DatabaseManager;
-import org.mockito.MockedStatic;
-import org.mockito.Mockito;
+import dataaccess.DataAccessException;
+
 
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -92,18 +92,28 @@ public class MySqlUserDAOTest {
     }
 
     @Test
-    void testCreateUserDataAccessException() {
+    void testCreateUserDataAccessException() throws Exception {
         MySqlUserDAO userDAO = new MySqlUserDAO();
         UserData user = new UserData("gavin", "123", "email");
 
-        try (MockedStatic<DatabaseManager> mocked =
-                     Mockito.mockStatic(DatabaseManager.class)) {
-            mocked.when(DatabaseManager::getConnection)
-                    .thenThrow(new DataAccessException("Connection failed"));
+        Field urlField = DatabaseManager.class.getDeclaredField("connectionUrl");
+        urlField.setAccessible(true);
+
+        String originalUrl = (String) urlField.get(null);
+
+        try {
+            urlField.set(null, "jdbc:mysql://localhost:3307");
 
             assertFalse(userDAO.createUser(user));
+
+        } finally {
+            urlField.set(null, originalUrl);
         }
     }
+
+
+
+
 
 
 }

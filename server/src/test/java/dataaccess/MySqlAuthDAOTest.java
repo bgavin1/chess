@@ -6,12 +6,14 @@ import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.MockedStatic;
-import org.mockito.Mockito;
 import passoff.server.TestServerFacade;
 import server.Server;
 import sql.MySqlAuthDAO;
+import java.lang.reflect.Field;
+import dataaccess.DatabaseManager;
+import dataaccess.DataAccessException;
 import sql.MySqlGameDAO;
+
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -77,64 +79,86 @@ public class MySqlAuthDAOTest {
     }
 
     @Test
-    void testCreateAuthDataAccessException() {
+    void testCreateAuthDataAccessException() throws Exception {
         MySqlAuthDAO authDAO = new MySqlAuthDAO();
 
-        try (MockedStatic<DatabaseManager> mocked =
-                     Mockito.mockStatic(DatabaseManager.class)) {
+        Field urlField = DatabaseManager.class.getDeclaredField("connectionUrl");
+        urlField.setAccessible(true);
 
-            mocked.when(DatabaseManager::getConnection)
-                    .thenThrow(new DataAccessException("Connection failed"));
+        String originalUrl = (String) urlField.get(null);
+
+        try {
+            urlField.set(null, "jdbc:mysql://localhost:3307");
 
             assertThrows(RuntimeException.class,
                     () -> authDAO.createAuth("Test"));
+
+        } finally {
+            urlField.set(null, originalUrl);
         }
     }
 
     @Test
-    void testGetAuthDataAccessException() {
+    void testGetAuthDataAccessException() throws Exception {
         MySqlAuthDAO authDAO = new MySqlAuthDAO();
 
-        try (MockedStatic<DatabaseManager> mocked =
-                     Mockito.mockStatic(DatabaseManager.class)) {
+        Field urlField = DatabaseManager.class.getDeclaredField("connectionUrl");
+        urlField.setAccessible(true);
 
-            mocked.when(DatabaseManager::getConnection)
-                    .thenThrow(new DataAccessException("Connection failed"));
+        String originalUrl = (String) urlField.get(null);
+
+        try {
+            urlField.set(null, "jdbc:mysql://localhost:3307");
 
             assertThrows(RuntimeException.class,
                     () -> authDAO.getAuth("Test"));
+
+        } finally {
+            urlField.set(null, originalUrl);
         }
     }
 
     @Test
-    void testDeleteAuthDataAccessException() {
+    void testDeleteAuthDataAccessException() throws Exception {
         MySqlAuthDAO authDAO = new MySqlAuthDAO();
 
-        try (MockedStatic<DatabaseManager> mocked =
-                     Mockito.mockStatic(DatabaseManager.class)) {
+        Field urlField = DatabaseManager.class.getDeclaredField("connectionUrl");
+        urlField.setAccessible(true);
 
-            mocked.when(DatabaseManager::getConnection)
-                    .thenThrow(new DataAccessException("Connection failed"));
+        String originalUrl = (String) urlField.get(null);
+
+        try {
+            urlField.set(null, "jdbc:mysql://localhost:3307");
 
             assertThrows(RuntimeException.class,
                     () -> authDAO.deleteAuth("Test"));
+
+        } finally {
+            urlField.set(null, originalUrl);
         }
     }
 
     @Test
-    void testClearDataAccessException() {
+    void testClearAuthDataAccessException() throws Exception {
         MySqlAuthDAO authDAO = new MySqlAuthDAO();
 
-        try (MockedStatic<DatabaseManager> mocked =
-                     Mockito.mockStatic(DatabaseManager.class)) {
+        Field urlField = DatabaseManager.class.getDeclaredField("connectionUrl");
+        urlField.setAccessible(true);
 
-            mocked.when(DatabaseManager::getConnection)
-                    .thenThrow(new DataAccessException("Connection failed"));
+        String originalUrl = (String) urlField.get(null);
+
+        try {
+            urlField.set(null, "jdbc:mysql://localhost:3307");
 
             assertThrows(RuntimeException.class,
                     () -> authDAO.clear());
+
+        } finally {
+            urlField.set(null, originalUrl);
         }
     }
+
+
 
 
 }
