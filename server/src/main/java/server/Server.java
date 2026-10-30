@@ -102,9 +102,11 @@ public class Server {
             ctx.result("{}");
         });
 
+        configureExceptionHandlers();
 
+    }
 
-
+    private void configureExceptionHandlers() {
         javalin.exception(BadRequestException.class, (exception, ctx) -> {
             ctx.status(400);
             ctx.result(new Gson().toJson(Map.of("message", "Error: bad request")));
@@ -123,9 +125,7 @@ public class Server {
         javalin.exception(Exception.class, (exception, ctx) -> {
             ctx.status(500);
             ctx.result(new Gson().toJson(Map.of("message", "Error: Unexpected error")));
-
         });
-
     }
 
     public int run(int desiredPort) {

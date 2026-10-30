@@ -16,7 +16,7 @@ import java.util.Random;
 
 
 
-public class MySqlGameDAO implements GameDAO {
+public class MySqlGameDAO extends MySqlDAO implements GameDAO {
     private final Map<Integer, GameData> games = new HashMap<>();
 
     String insertSql = """
@@ -157,13 +157,7 @@ public class MySqlGameDAO implements GameDAO {
 
     @Override
     public void clear() {
-        try (var conn = DatabaseManager.getConnection();
-             var statement = conn.prepareStatement(clearSql)) {
-
-            statement.executeUpdate();
-        } catch (SQLException | DataAccessException e) {
-            throw new RuntimeException(e);
-        }
+        clear(clearSql);
 
     }
 

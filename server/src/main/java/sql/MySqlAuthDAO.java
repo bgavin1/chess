@@ -8,7 +8,7 @@ import model.AuthData;
 import java.sql.SQLException;
 import java.util.UUID;
 
-public class MySqlAuthDAO implements AuthDAO {
+public class MySqlAuthDAO extends MySqlDAO implements AuthDAO {
     String insertSql = """
             INSERT INTO auth (authtoken, username)
             VALUES (?, ?)
@@ -75,14 +75,7 @@ public class MySqlAuthDAO implements AuthDAO {
 
     @Override
     public void clear() {
-        try (var conn = DatabaseManager.getConnection();
-             var statement = conn.prepareStatement(clearSql)) {
-
-            statement.executeUpdate();
-        } catch (SQLException | DataAccessException e) {
-            throw new RuntimeException(e);
-        }
-
+        clear(clearSql);
     }
 
     }

@@ -8,7 +8,7 @@ import org.mindrot.jbcrypt.BCrypt;
 
 import java.sql.SQLException;
 
-public class MySqlUserDAO implements UserDAO {
+public class MySqlUserDAO extends MySqlDAO implements UserDAO {
     String insertSql = """
             INSERT INTO users (username, password, email)
             VALUES (?, ?, ?)
@@ -63,12 +63,6 @@ DELETE FROM users
 
     @Override
     public void clear() {
-        try (var conn = DatabaseManager.getConnection();
-             var statement = conn.prepareStatement(clearSql)) {
-
-            statement.executeUpdate();
-        } catch (SQLException | DataAccessException e) {
-            throw new RuntimeException(e);
-        }
+        clear(clearSql);
     }
 }
