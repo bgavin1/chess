@@ -3,7 +3,7 @@
     <module name="server" />
     <extension name="coverage" runner="jacoco">
       <pattern>
-        <option name="PATTERN" value="dataaccess.*" />
+        <option name="PATTERN" value="sql.*" />
         <option name="ENABLED" value="true" />
       </pattern>
       <pattern>
@@ -11,8 +11,8 @@
         <option name="ENABLED" value="true" />
       </pattern>
     </extension>
-    <option name="PACKAGE_NAME" value="dataaccess" />
-    <option name="MAIN_CLASS_NAME" value="dataaccess.MySqlGameDAOTest" />
+    <option name="PACKAGE_NAME" value="sql" />
+    <option name="MAIN_CLASS_NAME" value="sql.MySqlGameDAOTest" />
     <option name="METHOD_NAME" value="" />
     <option name="TEST_OBJECT" value="class" />
     <method v="2">

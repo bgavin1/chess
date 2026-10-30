@@ -1,10 +1,11 @@
-package dataaccess;
+package dataaccess.sql;
 
+import dataaccess.DatabaseManager;
 import model.UserData;
 import org.junit.jupiter.api.Test;
 import org.mindrot.jbcrypt.BCrypt;
 import passoff.server.DatabaseTests;
-import dataaccess.sql.MySqlUserDAO;
+
 import java.lang.reflect.Field;
 
 

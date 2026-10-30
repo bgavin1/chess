@@ -1,9 +1,10 @@
-package dataaccess;
+package dataaccess.sql;
 
+import dataaccess.DatabaseManager;
 import model.AuthData;
 import org.junit.jupiter.api.Test;
 import passoff.server.DatabaseTests;
-import dataaccess.sql.MySqlAuthDAO;
+
 import java.lang.reflect.Field;
 
 
