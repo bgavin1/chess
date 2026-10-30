@@ -25,7 +25,8 @@ public class UserService {
 
 
         if (userObject.getUser(registerRequest.username()) == null) {
-            UserData newUserObject = new UserData(registerRequest.username(), registerRequest.password(), registerRequest.email());
+            String hashedPassword = BCrypt.hashpw(registerRequest.password(), BCrypt.gensalt());
+            UserData newUserObject = new UserData(registerRequest.username(), hashedPassword, registerRequest.email());
             System.out.println(userObject.getClass().getName());
             userObject.createUser(newUserObject);
 

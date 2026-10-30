@@ -57,7 +57,7 @@ public class MySqlUserDAOTest extends DatabaseTests {
     void testNullUsername() {
         MySqlUserDAO userDAO = new MySqlUserDAO();
         UserData user = new UserData(null, "123", "email");
-        assertFalse(userDAO.createUser(user));
+        assertThrows(RuntimeException.class, () -> userDAO.createUser(user));
 
     }
 
@@ -81,7 +81,7 @@ public class MySqlUserDAOTest extends DatabaseTests {
         try {
             urlField.set(null, "jdbc:mysql://localhost:3307");
 
-            assertFalse(userDAO.createUser(user));
+            assertThrows(RuntimeException.class, () -> userDAO.createUser(user));
 
         } finally {
             urlField.set(null, originalUrl);
