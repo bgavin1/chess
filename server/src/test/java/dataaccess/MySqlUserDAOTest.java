@@ -5,12 +5,18 @@ import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mindrot.jbcrypt.BCrypt;
 import passoff.model.TestUser;
 import passoff.server.TestServerFacade;
 import server.Server;
 import sql.MySqlUserDAO;
+import dataaccess.DataAccessException;
+import dataaccess.DatabaseManager;
+import org.mockito.MockedStatic;
+import org.mockito.Mockito;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+
+import static org.junit.jupiter.api.Assertions.*;
 
 public class MySqlUserDAOTest {
     private static final TestUser TEST_USER = new TestUser("ExistingUser", "existingUserPassword", "eu@mail.com");
@@ -48,6 +54,56 @@ public class MySqlUserDAOTest {
         assertEquals(true, result);
     }
 
+    @Test
+    void testGetUser() {
+        MySqlUserDAO userDAO = new MySqlUserDAO();
+        UserData user = new UserData("gavin", "123", "email");
+        userDAO.createUser(user);
+        UserData result = userDAO.getUser("gavin");
+        assertEquals("gavin", result.username());
+        assertTrue(BCrypt.checkpw("123", result.password()));
+        assertEquals("email", result.email());
+
+
+    }
+
+    @Test
+    void testClear() {
+        MySqlUserDAO userDAO = new MySqlUserDAO();
+        UserData user = new UserData("gavin", "123", "email");
+        userDAO.createUser(user);
+        userDAO.clear();
+        assertNull(userDAO.getUser("gavin"));
+    }
+
+    @Test
+    void testNullUsername() {
+        MySqlUserDAO userDAO = new MySqlUserDAO();
+        UserData user = new UserData(null, "123", "email");
+        assertFalse(userDAO.createUser(user));
+
+    }
+
+    @Test
+    void testGetUserNull() {
+        MySqlUserDAO userDAO = new MySqlUserDAO();
+        UserData user = new UserData("gavin", "123", "email");
+        assertNull(userDAO.getUser(null));
+    }
+
+    @Test
+    void testCreateUserDataAccessException() {
+        MySqlUserDAO userDAO = new MySqlUserDAO();
+        UserData user = new UserData("gavin", "123", "email");
+
+        try (MockedStatic<DatabaseManager> mocked =
+                     Mockito.mockStatic(DatabaseManager.class)) {
+            mocked.when(DatabaseManager::getConnection)
+                    .thenThrow(new DataAccessException("Connection failed"));
+
+            assertFalse(userDAO.createUser(user));
+        }
+    }
 
 
 }
