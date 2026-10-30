@@ -33,14 +33,8 @@ DELETE FROM users
             statement.setString(3, user.email());
 
             statement.executeUpdate();
-        } catch (SQLException e) {
-            System.out.println("User insert failed");
-            e.printStackTrace();
-            return false;
-        } catch (DataAccessException e) {
-            System.out.println("User insert failed");
-            e.printStackTrace();
-            return false;
+        } catch (SQLException | DataAccessException e) {
+            throw new RuntimeException(e);
         }
         return true;
     }
@@ -62,9 +56,7 @@ DELETE FROM users
                 }
             }
 
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        } catch (DataAccessException e) {
+        } catch (SQLException | DataAccessException e) {
             throw new RuntimeException(e);
         }
     }
@@ -75,9 +67,7 @@ DELETE FROM users
              var statement = conn.prepareStatement(clearSql)) {
 
             statement.executeUpdate();
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        } catch (DataAccessException e) {
+        } catch (SQLException | DataAccessException e) {
             throw new RuntimeException(e);
         }
     }

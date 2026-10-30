@@ -65,11 +65,7 @@ public class MySqlGameDAO implements GameDAO {
             statement.setString(5, json);
 
             statement.executeUpdate();
-        } catch (SQLException e) {
-            e.printStackTrace();
-            throw new RuntimeException(e);
-        } catch (DataAccessException e) {
-            e.printStackTrace();
+        } catch (SQLException | DataAccessException e) {
             throw new RuntimeException(e);
         }
         GameData newGame = new GameData(gameID, null, null, gameName, myGame);
@@ -87,9 +83,7 @@ public class MySqlGameDAO implements GameDAO {
             try (var result = statement.executeQuery()) {
                 return result.next();
             }
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        } catch (DataAccessException e) {
+        } catch (SQLException | DataAccessException e) {
             throw new RuntimeException(e);
         }
 
@@ -108,9 +102,7 @@ public class MySqlGameDAO implements GameDAO {
                 statement.setInt(4, gameID);
 
                 statement.executeUpdate();
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        } catch (DataAccessException e) {
+        } catch (SQLException | DataAccessException e) {
             throw new RuntimeException(e);
         }
 
@@ -135,9 +127,7 @@ public class MySqlGameDAO implements GameDAO {
                 }
             }
 
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        } catch (DataAccessException e) {
+        } catch (SQLException | DataAccessException e) {
             throw new RuntimeException(e);
         }
     }
@@ -159,11 +149,7 @@ public class MySqlGameDAO implements GameDAO {
                         games.put(gameID, new GameData(gameID, whiteUsername, blackUsername, gameName, restoredGame));
                     }
                 }
-        } catch (SQLException e) {
-            e.printStackTrace();
-            throw new RuntimeException(e);
-        } catch (DataAccessException e) {
-            e.printStackTrace();
+        } catch (SQLException | DataAccessException e) {
             throw new RuntimeException(e);
         }
         return games.values();
@@ -175,9 +161,7 @@ public class MySqlGameDAO implements GameDAO {
              var statement = conn.prepareStatement(clearSql)) {
 
             statement.executeUpdate();
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        } catch (DataAccessException e) {
+        } catch (SQLException | DataAccessException e) {
             throw new RuntimeException(e);
         }
 

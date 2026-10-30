@@ -34,13 +34,9 @@ public class MySqlAuthDAO implements AuthDAO {
             statement.setString(2, username);
 
             statement.executeUpdate();
-        } catch (SQLException e) {
-            e.printStackTrace();
-            throw new RuntimeException(e);
-        } catch (DataAccessException e) {
-            e.printStackTrace();
-            throw new RuntimeException(e);
-        }
+        } catch (SQLException | DataAccessException e) {
+        throw new RuntimeException(e);
+    }
 
         return new AuthData(authToken, username);
     }
@@ -59,9 +55,7 @@ public class MySqlAuthDAO implements AuthDAO {
                         return null;
                     }
                 }
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        } catch (DataAccessException e) {
+        } catch (SQLException | DataAccessException e) {
             throw new RuntimeException(e);
         }
 
@@ -74,9 +68,7 @@ public class MySqlAuthDAO implements AuthDAO {
             statement.setString(1, authToken);
 
             statement.executeUpdate();
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        } catch (DataAccessException e) {
+        } catch (SQLException | DataAccessException e) {
             throw new RuntimeException(e);
         }
     }
@@ -87,9 +79,7 @@ public class MySqlAuthDAO implements AuthDAO {
              var statement = conn.prepareStatement(clearSql)) {
 
             statement.executeUpdate();
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        } catch (DataAccessException e) {
+        } catch (SQLException | DataAccessException e) {
             throw new RuntimeException(e);
         }
 
