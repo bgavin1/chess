@@ -7,6 +7,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mindrot.jbcrypt.BCrypt;
 import passoff.model.TestUser;
+import passoff.server.DatabaseTests;
 import passoff.server.TestServerFacade;
 import server.Server;
 import sql.MySqlUserDAO;
@@ -18,33 +19,9 @@ import dataaccess.DataAccessException;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-public class MySqlUserDAOTest {
-    private static final TestUser TEST_USER = new TestUser("ExistingUser", "existingUserPassword", "eu@mail.com");
+public class MySqlUserDAOTest extends DatabaseTests {
 
-    private static TestServerFacade serverFacade;
 
-    private static Server server;
-
-    private static Class<?> databaseManagerClass;
-
-    @BeforeAll
-    public static void startServer() {
-        server = new Server();
-        var port = server.run(0);
-        System.out.println("Started test HTTP server on " + port);
-
-        serverFacade = new TestServerFacade("localhost", Integer.toString(port));
-    }
-
-    @BeforeEach
-    public void setUp() {
-        serverFacade.clear();
-    }
-
-    @AfterAll
-    static void stopServer() {
-        server.stop();
-    }
 
     @Test
     void testCreateUser() {
