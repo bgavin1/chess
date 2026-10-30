@@ -34,7 +34,8 @@ public class MySqlUserDAOTest extends DatabaseTests {
     @Test
     void testGetUser() {
         MySqlUserDAO userDAO = new MySqlUserDAO();
-        UserData user = new UserData("gavin", "123", "email");
+        String hashedPassword = BCrypt.hashpw("123", BCrypt.gensalt());
+        UserData user = new UserData("gavin", hashedPassword, "email");
         userDAO.createUser(user);
         UserData result = userDAO.getUser("gavin");
         assertEquals("gavin", result.username());
