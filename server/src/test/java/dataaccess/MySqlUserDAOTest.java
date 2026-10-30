@@ -1,20 +1,11 @@
 package dataaccess;
 
 import model.UserData;
-import org.junit.jupiter.api.AfterAll;
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mindrot.jbcrypt.BCrypt;
-import passoff.model.TestUser;
 import passoff.server.DatabaseTests;
-import passoff.server.TestServerFacade;
-import server.Server;
-import sql.MySqlUserDAO;
+import dataaccess.sql.MySqlUserDAO;
 import java.lang.reflect.Field;
-import dataaccess.DatabaseManager;
-import dataaccess.DataAccessException;
-
 
 
 import static org.junit.jupiter.api.Assertions.*;

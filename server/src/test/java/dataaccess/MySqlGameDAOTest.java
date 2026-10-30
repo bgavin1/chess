@@ -1,18 +1,10 @@
 package dataaccess;
 
 import model.GameData;
-import org.junit.jupiter.api.AfterAll;
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import passoff.model.TestUser;
 import passoff.server.DatabaseTests;
-import passoff.server.TestServerFacade;
-import server.Server;
-import sql.MySqlGameDAO;
+import dataaccess.sql.MySqlGameDAO;
 import java.lang.reflect.Field;
-import dataaccess.DatabaseManager;
-import dataaccess.DataAccessException;
 
 
 import java.util.Collection;

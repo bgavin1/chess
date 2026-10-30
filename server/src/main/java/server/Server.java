@@ -8,10 +8,10 @@ import com.google.gson.JsonObject;
 import service.exceptions.AlreadyTakenException;
 import service.exceptions.BadRequestException;
 import service.exceptions.UnauthorizedException;
-import sql.MySqlAuthDAO;
-import sql.MySqlDataAccess;
-import sql.MySqlGameDAO;
-import sql.MySqlUserDAO;
+import dataaccess.sql.MySqlAuthDAO;
+import dataaccess.sql.MySqlDataAccess;
+import dataaccess.sql.MySqlGameDAO;
+import dataaccess.sql.MySqlUserDAO;
 
 import java.sql.SQLException;
 import java.util.Map;
