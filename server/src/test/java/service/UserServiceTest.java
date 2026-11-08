@@ -2,6 +2,7 @@ package service;
 
 import dataaccess.MemoryAuthDAO;
 import dataaccess.MemoryUserDAO;
+import model.*;
 import org.junit.jupiter.api.Test;
 import service.exceptions.BadRequestException;
 

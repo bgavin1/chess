@@ -2,6 +2,7 @@ package server;
 
 import dataaccess.*;
 import io.javalin.*;
+import model.*;
 import service.*;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
