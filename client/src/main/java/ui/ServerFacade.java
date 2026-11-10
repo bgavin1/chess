@@ -1,9 +1,8 @@
 package ui;
 
 import com.google.gson.Gson;
-import model.AuthData;
-import model.LoginRequest;
-import model.LoginResult;
+import com.google.gson.JsonObject;
+import model.*;
 
 import java.io.IOException;
 import java.net.URI;
@@ -45,5 +44,104 @@ public class ServerFacade {
 
 
     }
+
+    public RegisterResult register(String username, String password, String email) {
+        try {
+            URI uri = URI.create(serverAddress + "/user");
+            RegisterRequest registerRequest = new RegisterRequest(username, password, email);
+            Gson gson = new Gson();
+            String json = gson.toJson(registerRequest);
+
+
+            HttpRequest request = HttpRequest.newBuilder()
+                    .uri(uri)
+                    .header("Content-Type", "application/json")
+                    .POST(HttpRequest.BodyPublishers.ofString(json))
+                    .build();
+
+            HttpClient client = HttpClient.newHttpClient();
+            HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
+            RegisterResult result = new Gson().fromJson(response.body(), RegisterResult.class);
+            return result;
+        } catch (IOException | InterruptedException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public void logout(String authToken) {
+        try {
+            URI uri = URI.create(serverAddress + "/session");
+            LogoutRequest logoutRequest = new LogoutRequest(authToken);
+            Gson gson = new Gson();
+            String json = gson.toJson(logoutRequest);
+
+
+            HttpRequest request = HttpRequest.newBuilder()
+                    .uri(uri)
+                    .header("Authorization", authToken)
+                    .DELETE()
+                    .build();
+
+            HttpClient client = HttpClient.newHttpClient();
+            client.send(request, HttpResponse.BodyHandlers.ofString());
+        } catch (IOException | InterruptedException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public CreateGameResult createGame(String gameName, String authToken) {
+        try {
+            URI uri = URI.create(serverAddress + "/game");
+            JsonObject body = new JsonObject();
+            body.addProperty("gameName", gameName);
+            Gson gson = new Gson();
+            String json = gson.toJson(body);
+
+
+            HttpRequest request = HttpRequest.newBuilder()
+                    .uri(uri)
+                    .header("Authorization", authToken)
+                    .POST(HttpRequest.BodyPublishers.ofString(json))
+                    .build();
+
+            HttpClient client = HttpClient.newHttpClient();
+            HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
+            CreateGameResult result = gson.fromJson(response.body(), CreateGameResult.class);
+            return result;
+        } catch (IOException | InterruptedException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public ListGamesResult listGames(String authToken) {
+        try {
+            URI uri = URI.create(serverAddress + "/game");
+            Gson gson = new Gson();
+
+            HttpRequest request = HttpRequest.newBuilder()
+                    .uri(uri)
+                    .header("Authorization", authToken)
+                    .GET()
+                    .build();
+
+            HttpClient client = HttpClient.newHttpClient();
+            HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
+            ListGamesResult result = gson.fromJson(response.body(), ListGamesResult.class);
+            return result;
+        } catch (IOException | InterruptedException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public void joinGame() {
+
+    }
+
+    public void observeGame() {
+
+    }
+
+
+
 
 }
