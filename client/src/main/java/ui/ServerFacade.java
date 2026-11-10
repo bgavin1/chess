@@ -133,7 +133,27 @@ public class ServerFacade {
         }
     }
 
-    public void joinGame() {
+    public void playGame(String playerColor, Integer gameID, String authToken) {
+        try {
+            URI uri = URI.create(serverAddress + "/game");
+            JsonObject body = new JsonObject();
+            body.addProperty("gameID", gameID);
+            body.addProperty("playerColor", playerColor);
+            Gson gson = new Gson();
+            String json = gson.toJson(body);
+
+
+            HttpRequest request = HttpRequest.newBuilder()
+                    .uri(uri)
+                    .header("Authorization", authToken)
+                    .PUT(HttpRequest.BodyPublishers.ofString(json))
+                    .build();
+
+            HttpClient client = HttpClient.newHttpClient();
+            client.send(request, HttpResponse.BodyHandlers.ofString());
+        } catch (IOException | InterruptedException e) {
+            throw new RuntimeException(e);
+        }
 
     }
 

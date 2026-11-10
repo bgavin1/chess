@@ -1,8 +1,12 @@
 package ui;
 
 import model.CreateGameResult;
+import model.GameResultData;
+import model.ListGamesResult;
 import model.LoginResult;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Scanner;
 
 public class PostLoginUI {
@@ -28,7 +32,7 @@ public class PostLoginUI {
             System.out.println("- Logout");
             System.out.println("- Create a Game: type 'Create'");
             System.out.println("- List all Games: type 'List'");
-            System.out.println("- Join a Game: type 'Join'");
+            System.out.println("- Play a Game: type 'Play'");
             System.out.println("- Observe a Game: type 'Observe'");
             choice = scanner.nextLine();
             if (choice.equals("Logout")) {
@@ -37,8 +41,8 @@ public class PostLoginUI {
                 createGame();
             } else if (choice.equals("List")) {
                 listGames();
-            } else if (choice.equals("Join")) {
-                joinGame();
+            } else if (choice.equals("Play")) {
+                playGame();
             } else if (choice.equals("Observe")) {
                 observeGame();
             } else if (choice.equals("Help")) {
@@ -53,6 +57,7 @@ public class PostLoginUI {
         System.out.println("Logout: Logs you out");
         System.out.println("Create a Game: Starts a new game");
         System.out.println("List all Games: Shows you a list of all ongoing games");
+        System.out.println("Play a Game: Join an existing game");
         System.out.println("Observe a Game: Lets you watch an ongoing game");
         System.out.println();
     }
@@ -71,11 +76,34 @@ public class PostLoginUI {
 
     }
 
-    public void listGames() {
+    public ListGamesResult listGames() {
+        ListGamesResult result = serverFacade.listGames(authToken);
+
+        int number = 1;
+        for (GameResultData game : result.games()) {
+            String white = (game.whiteUsername() == null ? "Available" : game.whiteUsername());
+            String black = (game.blackUsername() == null ? "Available" : game.blackUsername());
+
+            System.out.println(number + "." + game.gameName()
+            + "- White: " + white + ", Black: " + black);
+            number ++;
+        }
+        return result;
 
     }
 
-    public void joinGame() {
+    public void playGame() {
+        ListGamesResult result = listGames();
+        System.out.println("What number is your game in the list? ");
+        int number = Integer.parseInt(scanner.nextLine());
+        System.out.println("What color would you like to be? ");
+        String playerColor = scanner.nextLine();
+
+        List<GameResultData> games = new ArrayList<>(result.games());
+        Integer gameID = games.get(number - 1).gameID();
+
+        serverFacade.playGame(playerColor, gameID, authToken);
+
 
     }
 
