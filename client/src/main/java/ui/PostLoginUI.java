@@ -73,6 +73,7 @@ public class PostLoginUI {
         String gameName = scanner.nextLine();
 
         CreateGameResult result = serverFacade.createGame(gameName, authToken);
+        System.out.println("Game created!");
 
     }
 
@@ -103,11 +104,21 @@ public class PostLoginUI {
         Integer gameID = games.get(number - 1).gameID();
 
         serverFacade.playGame(playerColor, gameID, authToken);
+        System.out.println("Game joined!");
 
 
     }
 
     public void observeGame() {
+        ListGamesResult result = listGames();
+        System.out.println("What number is your game in the list? ");
+        int number = Integer.parseInt(scanner.nextLine());
+
+        List<GameResultData> games = new ArrayList<>(result.games());
+        Integer gameID = games.get(number - 1).gameID();
+
+        serverFacade.observeGame(gameID);
+        System.out.println("Game selected: " + games.get(number - 1).gameName());
 
     }
 

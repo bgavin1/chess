@@ -54,6 +54,9 @@ public class PreLoginUI {
         String password = scanner.nextLine();
 
         LoginResult result = serverFacade.login(username, password);
+        PostLoginUI postLoginUI = new PostLoginUI(serverFacade, scanner, username, result.authToken());
+        postLoginUI.run();
+
 
 
     }
@@ -67,7 +70,8 @@ public class PreLoginUI {
         String email = scanner.nextLine();
 
         RegisterResult result = serverFacade.register(username, password, email);
-
+        PostLoginUI postLoginUI = new PostLoginUI(serverFacade, scanner, username, result.authToken());
+        postLoginUI.run();
 
     }
 

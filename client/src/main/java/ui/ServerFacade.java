@@ -20,7 +20,6 @@ public class ServerFacade {
 
     public LoginResult login(String username, String password) {
 
-
         try {
             URI uri = URI.create(serverAddress + "/session");
             LoginRequest loginRequest = new LoginRequest(username, password);
@@ -36,8 +35,14 @@ public class ServerFacade {
 
             HttpClient client = HttpClient.newHttpClient();
             HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
-            LoginResult result = new Gson().fromJson(response.body(), LoginResult.class);
-            return result;
+            if (response.statusCode() == 200) {
+                LoginResult result = new Gson().fromJson(response.body(), LoginResult.class);
+                return result;
+            } else if (response.statusCode() == 401){
+                throw new RuntimeException("invalid username or password");
+            } else {
+                throw new RuntimeException("Server error");
+            }
         } catch (IOException | InterruptedException e) {
             throw new RuntimeException(e);
         }
@@ -157,7 +162,7 @@ public class ServerFacade {
 
     }
 
-    public void observeGame() {
+    public void observeGame(int gameID) {
 
     }
 
