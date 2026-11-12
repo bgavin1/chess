@@ -17,7 +17,6 @@ public class ServerFacade {
 
     public ServerFacade(String serverAddress) {
         this.serverAddress = serverAddress;
-
     }
 
     public LoginResult login(String username, String password) {
@@ -115,7 +114,6 @@ public class ServerFacade {
             Gson gson = new Gson();
             String json = gson.toJson(body);
 
-
             HttpRequest request = HttpRequest.newBuilder()
                     .uri(uri)
                     .header("Authorization", authToken)
@@ -168,7 +166,6 @@ public class ServerFacade {
             Gson gson = new Gson();
             String json = gson.toJson(body);
 
-
             HttpRequest request = HttpRequest.newBuilder()
                     .uri(uri)
                     .header("Authorization", authToken)
@@ -189,13 +186,10 @@ public class ServerFacade {
         } catch (IOException | InterruptedException e) {
             throw new RuntimeException(e);
         }
-
     }
 
     public void observeGame(int gameID) {
     }
-
-
 
 
 }
