@@ -13,6 +13,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
+import static org.junit.jupiter.params.shadow.com.univocity.parsers.conversions.Conversions.toUpperCase;
+
 public class PostLoginUI {
 
     private final ServerFacade serverFacade;
@@ -29,7 +31,7 @@ public class PostLoginUI {
 
     public void run() {
         String choice = "";
-        while (!choice.equals("Logout")) {
+        while (!choice.equals("LOGOUT")) {
             System.out.printf("Welcome, %s! ", username);
             System.out.println("Please enter a command:");
             System.out.println("- Help");
@@ -38,18 +40,18 @@ public class PostLoginUI {
             System.out.println("- List all Games: type 'List'");
             System.out.println("- Play a Game: type 'Play'");
             System.out.println("- Observe a Game: type 'Observe'");
-            choice = scanner.nextLine();
-            if (choice.equals("Logout")) {
+            choice = scanner.nextLine().toUpperCase();
+            if (choice.equals("LOGOUT")) {
                 logout();
-            } else if (choice.equals("Create")) {
+            } else if (choice.equals("CREATE")) {
                 createGame();
-            } else if (choice.equals("List")) {
+            } else if (choice.equals("LIST")) {
                 listGames();
-            } else if (choice.equals("Play")) {
+            } else if (choice.equals("PLAY")) {
                 playGame();
-            } else if (choice.equals("Observe")) {
+            } else if (choice.equals("OBSERVE")) {
                 observeGame();
-            } else if (choice.equals("Help")) {
+            } else if (choice.equals("HELP")) {
                 help();
             } else {
                 System.out.println("Invalid command. Try again");
@@ -95,7 +97,7 @@ public class PostLoginUI {
                 String white = (game.whiteUsername() == null ? "Available" : game.whiteUsername());
                 String black = (game.blackUsername() == null ? "Available" : game.blackUsername());
 
-                System.out.println(number + "." + game.gameName()
+                System.out.println(number + ". " + game.gameName()
                         + "- White: " + white + ", Black: " + black);
                 number++;
             }
@@ -111,7 +113,12 @@ public class PostLoginUI {
             ChessGame game = new ChessGame();
             ListGamesResult result = listGames();
             System.out.println("What number is your game in the list? ");
-            int number = Integer.parseInt(scanner.nextLine());
+            int number;
+            try {
+                number = Integer.parseInt(scanner.nextLine());
+            } catch (NumberFormatException e) {
+                throw new RuntimeException("Please enter a valid game number");
+            }
             System.out.println("What color would you like to be? ");
             String playerColor = scanner.nextLine().toUpperCase();
 
@@ -130,15 +137,20 @@ public class PostLoginUI {
     }
 
     public void observeGame() {
-        ListGamesResult result = listGames();
-        System.out.println("What number is your game in the list? ");
-        int number = Integer.parseInt(scanner.nextLine());
+        try {
+            ListGamesResult result = listGames();
+            System.out.println("What number is your game in the list? ");
+            int number = Integer.parseInt(scanner.nextLine());
 
-        List<GameResultData> games = new ArrayList<>(result.games());
-        Integer gameID = games.get(number - 1).gameID();
+            List<GameResultData> games = new ArrayList<>(result.games());
+            Integer gameID = games.get(number - 1).gameID();
 
-        serverFacade.observeGame(gameID);
-        System.out.println("Game selected: " + games.get(number - 1).gameName());
+            serverFacade.observeGame(gameID);
+            System.out.println("Game selected: " + games.get(number - 1).gameName());
+        } catch (RuntimeException e) {
+            System.out.println("Failure to observe game: invalid list number chosen");
+
+        }
     }
 
     public void drawBoard(ChessBoard board, ChessGame.TeamColor perspective) {
