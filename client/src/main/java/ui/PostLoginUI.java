@@ -127,7 +127,6 @@ public class PostLoginUI {
         } catch (RuntimeException e) {
             System.out.println("Failure to join game: "+ e.getMessage());
         }
-
     }
 
     public void observeGame() {
@@ -140,7 +139,6 @@ public class PostLoginUI {
 
         serverFacade.observeGame(gameID);
         System.out.println("Game selected: " + games.get(number - 1).gameName());
-
     }
 
     public void drawBoard(ChessBoard board, ChessGame.TeamColor perspective) {
@@ -222,6 +220,7 @@ public class PostLoginUI {
             return "P";
         }
     }
+
 
 
 }

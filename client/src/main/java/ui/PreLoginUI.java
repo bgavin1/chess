@@ -38,7 +38,6 @@ public class PreLoginUI {
                 System.out.println("Invalid command. Try again");
             }
         }
-
     }
 
     public void help() {
