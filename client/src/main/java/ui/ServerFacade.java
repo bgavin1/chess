@@ -15,7 +15,7 @@ public class ServerFacade {
 
     private String serverAddress;
 
-    ServerFacade(String serverAddress) {
+    public ServerFacade(String serverAddress) {
         this.serverAddress = serverAddress;
 
     }

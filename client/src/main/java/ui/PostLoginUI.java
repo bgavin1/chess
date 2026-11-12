@@ -1,5 +1,6 @@
 package ui;
 
+import chess.ChessGame;
 import chess.ChessPiece;
 import chess.ChessPosition;
 import model.CreateGameResult;
@@ -29,7 +30,7 @@ public class PostLoginUI {
     public void run() {
         String choice = "";
         while (!choice.equals("Logout")) {
-            System.out.printf("Welcome, %s!", username);
+            System.out.printf("Welcome, %s! ", username);
             System.out.println("Please enter a command:");
             System.out.println("- Help");
             System.out.println("- Logout");
@@ -66,11 +67,8 @@ public class PostLoginUI {
     }
 
     public void logout() {
-        PreLoginUI preLoginUI = new PreLoginUI(serverFacade, scanner);
-
         try {
             serverFacade.logout(authToken);
-            preLoginUI.run();
         } catch (RuntimeException e) {
             System.out.println("Logout failed: " + e.getMessage());
         }
@@ -110,11 +108,12 @@ public class PostLoginUI {
 
     public void playGame() {
         try {
+            ChessGame game = new ChessGame();
             ListGamesResult result = listGames();
             System.out.println("What number is your game in the list? ");
             int number = Integer.parseInt(scanner.nextLine());
             System.out.println("What color would you like to be? ");
-            String playerColor = scanner.nextLine();
+            String playerColor = scanner.nextLine().toUpperCase();
 
             List<GameResultData> games = new ArrayList<>(result.games());
             if (number > games.size() || number < 1) {
@@ -124,6 +123,7 @@ public class PostLoginUI {
 
             serverFacade.playGame(playerColor, gameID, authToken);
             System.out.println("Game joined!");
+            drawBoard(game.getBoard(), ChessGame.TeamColor.valueOf(playerColor));
         } catch (RuntimeException e) {
             System.out.println("Failure to join game: "+ e.getMessage());
         }
@@ -143,9 +143,40 @@ public class PostLoginUI {
 
     }
 
-    public void drawBoard(ChessBoard board) {
-        for (int row = 8; row >= 1; row--) {
-            for (int col = 1; col <= 8; col++) {
+    public void drawBoard(ChessBoard board, ChessGame.TeamColor perspective) {
+        List<Character> columns = new ArrayList<>(List.of('a', 'b', 'c', 'd', 'e', 'f', 'g', 'h'));
+        int rowStart;
+        int rowEnd;
+        int rowChange;
+        int colStart;
+        int colEnd;
+        int colChange;
+
+        if (perspective == ChessGame.TeamColor.WHITE) {
+            rowStart = 8;
+            rowEnd = 1;
+            rowChange = -1;
+            colStart = 8;
+            colEnd = 1;
+            colChange = -1;
+        } else {
+            columns = columns.reversed();
+            rowStart = 1;
+            rowEnd = 8;
+            rowChange = 1;
+            colStart = 1;
+            colEnd = 8;
+            colChange = 1;
+        }
+        System.out.print("   ");
+        for (char item : columns) {
+            System.out.print(" " + item + " ");
+        }
+        System.out.println();
+        for (int row = rowStart;  rowChange * (row - rowEnd) <= 0; row += rowChange) {
+            System.out.print(" " + row + " ");
+            for (int col = colStart; colChange * (col - colEnd) <= 0; col += colChange) {
+
                 if ((row + col) % 2 == 0) {
                     System.out.print("\u001B[43m");
                 } else {
@@ -153,16 +184,30 @@ public class PostLoginUI {
                 }
                 ChessPosition myPosition = new ChessPosition(row, col);
                 ChessPiece myPiece = board.getPiece(myPosition);
-                System.out.print("   ");
+                String myPieceLetter = getPieceSymbol(myPiece);
+                if (myPiece != null) {
+                    if (myPiece.getTeamColor() == ChessGame.TeamColor.WHITE) {
+                        System.out.print("\u001B[31m");
+                    } else {
+                        System.out.print("\u001B[34m");
+                    }
+                }
+                System.out.print(" " + myPieceLetter + " ");
                 System.out.print("\u001B[0m");
             }
+            System.out.print(" " + row + " ");
             System.out.println();
         }
+        System.out.print("   ");
+        for (char item : columns) {
+            System.out.print(" " + item + " ");
+        }
+        System.out.println();
     }
 
     public String getPieceSymbol(ChessPiece piece) {
         if (piece == null) {
-            return "   ";
+            return " ";
         } else if (piece.getPieceType() == ChessPiece.PieceType.KING) {
             return "K";
         } else if (piece.getPieceType() == ChessPiece.PieceType.QUEEN) {
