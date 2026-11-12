@@ -3,6 +3,7 @@ package ui;
 import model.LoginResult;
 import model.RegisterResult;
 
+import java.io.IOException;
 import java.util.Scanner;
 
 public class PreLoginUI {
@@ -53,12 +54,13 @@ public class PreLoginUI {
         System.out.println("Password: ");
         String password = scanner.nextLine();
 
-        LoginResult result = serverFacade.login(username, password);
-        PostLoginUI postLoginUI = new PostLoginUI(serverFacade, scanner, username, result.authToken());
-        postLoginUI.run();
-
-
-
+        try {
+            LoginResult result = serverFacade.login(username, password);
+            PostLoginUI postLoginUI = new PostLoginUI(serverFacade, scanner, username, result.authToken());
+            postLoginUI.run();
+        } catch (RuntimeException e) {
+            System.out.println("Login failed: " + e.getMessage());
+        }
     }
 
     public void register() {
@@ -69,10 +71,13 @@ public class PreLoginUI {
         System.out.println("Email: ");
         String email = scanner.nextLine();
 
-        RegisterResult result = serverFacade.register(username, password, email);
-        PostLoginUI postLoginUI = new PostLoginUI(serverFacade, scanner, username, result.authToken());
-        postLoginUI.run();
-
+        try {
+            RegisterResult result = serverFacade.register(username, password, email);
+            PostLoginUI postLoginUI = new PostLoginUI(serverFacade, scanner, username, result.authToken());
+            postLoginUI.run();
+        } catch (RuntimeException e) {
+            System.out.println("Registering failed: " + e.getMessage());
+        }
     }
 
     public void quit() {

@@ -9,6 +9,7 @@ import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
+import java.util.Scanner;
 
 public class ServerFacade {
 
@@ -16,6 +17,7 @@ public class ServerFacade {
 
     ServerFacade(String serverAddress) {
         this.serverAddress = serverAddress;
+
     }
 
     public LoginResult login(String username, String password) {
@@ -38,8 +40,10 @@ public class ServerFacade {
             if (response.statusCode() == 200) {
                 LoginResult result = new Gson().fromJson(response.body(), LoginResult.class);
                 return result;
+            } else if (response.statusCode() == 400){
+                throw new RuntimeException("Invalid username/password. Try something else");
             } else if (response.statusCode() == 401){
-                throw new RuntimeException("invalid username or password");
+                throw new RuntimeException("No user with that information");
             } else {
                 throw new RuntimeException("Server error");
             }
@@ -66,8 +70,16 @@ public class ServerFacade {
 
             HttpClient client = HttpClient.newHttpClient();
             HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
-            RegisterResult result = new Gson().fromJson(response.body(), RegisterResult.class);
-            return result;
+            if (response.statusCode() == 200) {
+                RegisterResult result = new Gson().fromJson(response.body(), RegisterResult.class);
+                return result;
+            } else if (response.statusCode() == 400){
+                throw new RuntimeException("Invalid username/password. Try something else");
+            } else if (response.statusCode() == 401){
+                throw new RuntimeException("Username already taken");
+            } else {
+                throw new RuntimeException("Server error");
+            }
         } catch (IOException | InterruptedException e) {
             throw new RuntimeException(e);
         }
@@ -76,9 +88,7 @@ public class ServerFacade {
     public void logout(String authToken) {
         try {
             URI uri = URI.create(serverAddress + "/session");
-            LogoutRequest logoutRequest = new LogoutRequest(authToken);
-            Gson gson = new Gson();
-            String json = gson.toJson(logoutRequest);
+
 
 
             HttpRequest request = HttpRequest.newBuilder()
@@ -88,7 +98,14 @@ public class ServerFacade {
                     .build();
 
             HttpClient client = HttpClient.newHttpClient();
-            client.send(request, HttpResponse.BodyHandlers.ofString());
+            HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
+            if (response.statusCode() == 200) {
+
+            } else if (response.statusCode() == 400) {
+                throw new RuntimeException("No user to log out");
+            } else {
+                throw new RuntimeException("server error");
+            }
         } catch (IOException | InterruptedException e) {
             throw new RuntimeException(e);
         }
@@ -111,8 +128,12 @@ public class ServerFacade {
 
             HttpClient client = HttpClient.newHttpClient();
             HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
-            CreateGameResult result = gson.fromJson(response.body(), CreateGameResult.class);
-            return result;
+            if (response.statusCode() != 200) {
+                throw new RuntimeException("Invalid request to create a game");
+            } else {
+                CreateGameResult result = gson.fromJson(response.body(), CreateGameResult.class);
+                return result;
+            }
         } catch (IOException | InterruptedException e) {
             throw new RuntimeException(e);
         }
@@ -131,8 +152,12 @@ public class ServerFacade {
 
             HttpClient client = HttpClient.newHttpClient();
             HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
-            ListGamesResult result = gson.fromJson(response.body(), ListGamesResult.class);
-            return result;
+            if (response.statusCode() != 200) {
+                throw new RuntimeException("Invalid request to list games");
+            } else {
+                ListGamesResult result = gson.fromJson(response.body(), ListGamesResult.class);
+                return result;
+            }
         } catch (IOException | InterruptedException e) {
             throw new RuntimeException(e);
         }
@@ -155,7 +180,16 @@ public class ServerFacade {
                     .build();
 
             HttpClient client = HttpClient.newHttpClient();
-            client.send(request, HttpResponse.BodyHandlers.ofString());
+            HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
+            if (response.statusCode() == 200) {
+
+            } else if (response.statusCode() == 400 || response.statusCode() == 401) {
+                throw new RuntimeException("Invalid request to join a game");
+            } else if (response.statusCode() == 403) {
+                throw new RuntimeException("Color already taken");
+            } else {
+                throw new RuntimeException("server error");
+            }
         } catch (IOException | InterruptedException e) {
             throw new RuntimeException(e);
         }

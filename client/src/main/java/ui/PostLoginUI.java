@@ -1,9 +1,12 @@
 package ui;
 
+import chess.ChessPiece;
+import chess.ChessPosition;
 import model.CreateGameResult;
 import model.GameResultData;
 import model.ListGamesResult;
 import model.LoginResult;
+import chess.ChessBoard;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -64,48 +67,66 @@ public class PostLoginUI {
 
     public void logout() {
         PreLoginUI preLoginUI = new PreLoginUI(serverFacade, scanner);
-        serverFacade.logout(authToken);
-        preLoginUI.run();
+
+        try {
+            serverFacade.logout(authToken);
+            preLoginUI.run();
+        } catch (RuntimeException e) {
+            System.out.println("Logout failed: " + e.getMessage());
+        }
     }
 
     public void createGame() {
         System.out.println("Name your game: ");
         String gameName = scanner.nextLine();
 
-        CreateGameResult result = serverFacade.createGame(gameName, authToken);
-        System.out.println("Game created!");
-
+        try {
+            CreateGameResult result = serverFacade.createGame(gameName, authToken);
+            System.out.println("Game created!");
+        } catch (RuntimeException e) {
+            System.out.println("Create Game failure: " + e.getMessage());
+        }
     }
 
     public ListGamesResult listGames() {
-        ListGamesResult result = serverFacade.listGames(authToken);
+        try {
+            ListGamesResult result = serverFacade.listGames(authToken);
 
-        int number = 1;
-        for (GameResultData game : result.games()) {
-            String white = (game.whiteUsername() == null ? "Available" : game.whiteUsername());
-            String black = (game.blackUsername() == null ? "Available" : game.blackUsername());
+            int number = 1;
+            for (GameResultData game : result.games()) {
+                String white = (game.whiteUsername() == null ? "Available" : game.whiteUsername());
+                String black = (game.blackUsername() == null ? "Available" : game.blackUsername());
 
-            System.out.println(number + "." + game.gameName()
-            + "- White: " + white + ", Black: " + black);
-            number ++;
+                System.out.println(number + "." + game.gameName()
+                        + "- White: " + white + ", Black: " + black);
+                number++;
+            }
+            return result;
+        } catch (RuntimeException e) {
+            System.out.println("Failure to list games: " + e.getMessage());
+            return null;
         }
-        return result;
-
     }
 
     public void playGame() {
-        ListGamesResult result = listGames();
-        System.out.println("What number is your game in the list? ");
-        int number = Integer.parseInt(scanner.nextLine());
-        System.out.println("What color would you like to be? ");
-        String playerColor = scanner.nextLine();
+        try {
+            ListGamesResult result = listGames();
+            System.out.println("What number is your game in the list? ");
+            int number = Integer.parseInt(scanner.nextLine());
+            System.out.println("What color would you like to be? ");
+            String playerColor = scanner.nextLine();
 
-        List<GameResultData> games = new ArrayList<>(result.games());
-        Integer gameID = games.get(number - 1).gameID();
+            List<GameResultData> games = new ArrayList<>(result.games());
+            if (number > games.size() || number < 1) {
+                throw new RuntimeException("Invalid list number chosen");
+            }
+            Integer gameID = games.get(number - 1).gameID();
 
-        serverFacade.playGame(playerColor, gameID, authToken);
-        System.out.println("Game joined!");
-
+            serverFacade.playGame(playerColor, gameID, authToken);
+            System.out.println("Game joined!");
+        } catch (RuntimeException e) {
+            System.out.println("Failure to join game: "+ e.getMessage());
+        }
 
     }
 
@@ -122,6 +143,40 @@ public class PostLoginUI {
 
     }
 
+    public void drawBoard(ChessBoard board) {
+        for (int row = 8; row >= 1; row--) {
+            for (int col = 1; col <= 8; col++) {
+                if ((row + col) % 2 == 0) {
+                    System.out.print("\u001B[43m");
+                } else {
+                    System.out.print("\u001B[47m");
+                }
+                ChessPosition myPosition = new ChessPosition(row, col);
+                ChessPiece myPiece = board.getPiece(myPosition);
+                System.out.print("   ");
+                System.out.print("\u001B[0m");
+            }
+            System.out.println();
+        }
+    }
+
+    public String getPieceSymbol(ChessPiece piece) {
+        if (piece == null) {
+            return "   ";
+        } else if (piece.getPieceType() == ChessPiece.PieceType.KING) {
+            return "K";
+        } else if (piece.getPieceType() == ChessPiece.PieceType.QUEEN) {
+            return "Q";
+        } else if (piece.getPieceType() == ChessPiece.PieceType.BISHOP) {
+            return "B";
+        } else if (piece.getPieceType() == ChessPiece.PieceType.KNIGHT) {
+            return "N";
+        } else if (piece.getPieceType() == ChessPiece.PieceType.ROOK) {
+            return "R";
+        } else {
+            return "P";
+        }
+    }
 
 
 }
