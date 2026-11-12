@@ -73,8 +73,8 @@ public class ChessBoard {
         whiteBackRow.add(new ChessPiece(ChessGame.TeamColor.WHITE, ChessPiece.PieceType.ROOK));
         whiteBackRow.add(new ChessPiece(ChessGame.TeamColor.WHITE, ChessPiece.PieceType.KNIGHT));
         whiteBackRow.add(new ChessPiece(ChessGame.TeamColor.WHITE, ChessPiece.PieceType.BISHOP));
-        whiteBackRow.add(new ChessPiece(ChessGame.TeamColor.WHITE, ChessPiece.PieceType.QUEEN));
         whiteBackRow.add(new ChessPiece(ChessGame.TeamColor.WHITE, ChessPiece.PieceType.KING));
+        whiteBackRow.add(new ChessPiece(ChessGame.TeamColor.WHITE, ChessPiece.PieceType.QUEEN));
         whiteBackRow.add(new ChessPiece(ChessGame.TeamColor.WHITE, ChessPiece.PieceType.BISHOP));
         whiteBackRow.add(new ChessPiece(ChessGame.TeamColor.WHITE, ChessPiece.PieceType.KNIGHT));
         whiteBackRow.add(new ChessPiece(ChessGame.TeamColor.WHITE, ChessPiece.PieceType.ROOK));
@@ -82,8 +82,8 @@ public class ChessBoard {
         blackBackRow.add(new ChessPiece(ChessGame.TeamColor.BLACK, ChessPiece.PieceType.ROOK));
         blackBackRow.add(new ChessPiece(ChessGame.TeamColor.BLACK, ChessPiece.PieceType.KNIGHT));
         blackBackRow.add(new ChessPiece(ChessGame.TeamColor.BLACK, ChessPiece.PieceType.BISHOP));
-        blackBackRow.add(new ChessPiece(ChessGame.TeamColor.BLACK, ChessPiece.PieceType.QUEEN));
         blackBackRow.add(new ChessPiece(ChessGame.TeamColor.BLACK, ChessPiece.PieceType.KING));
+        blackBackRow.add(new ChessPiece(ChessGame.TeamColor.BLACK, ChessPiece.PieceType.QUEEN));
         blackBackRow.add(new ChessPiece(ChessGame.TeamColor.BLACK, ChessPiece.PieceType.BISHOP));
         blackBackRow.add(new ChessPiece(ChessGame.TeamColor.BLACK, ChessPiece.PieceType.KNIGHT));
         blackBackRow.add(new ChessPiece(ChessGame.TeamColor.BLACK, ChessPiece.PieceType.ROOK));

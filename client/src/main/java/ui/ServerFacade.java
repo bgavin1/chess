@@ -69,13 +69,10 @@ public class ServerFacade {
                 return result;
             } else if (response.statusCode() == 400){
                 throw new RuntimeException("Invalid username/password. Try something else");
-            } else if (response.statusCode() == 401){
-                throw new RuntimeException("Username already taken");
+            } else if (response.statusCode() == 401 || response.statusCode() == 403){
+                throw new RuntimeException("Username/password already taken");
             } else {
-                throw new RuntimeException(
-                        "Status: " + response.statusCode() +
-                                " Body: " + response.body()
-                );
+                throw new RuntimeException("server error");
             }
         } catch (IOException | InterruptedException e) {
             throw new RuntimeException(e);

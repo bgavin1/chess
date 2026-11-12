@@ -4,6 +4,7 @@ import model.LoginResult;
 import model.RegisterResult;
 
 import java.io.IOException;
+import java.util.Locale;
 import java.util.Scanner;
 
 public class PreLoginUI {
@@ -25,14 +26,14 @@ public class PreLoginUI {
             System.out.println("- Login");
             System.out.println("- Register");
             System.out.println("- Quit");
-            choice = scanner.nextLine();
-            if (choice.equals("Login")) {
+            choice = scanner.nextLine().toUpperCase();
+            if (choice.equals("LOGIN")) {
                 login();
-            } else if (choice.equals("Register")) {
+            } else if (choice.equals("REGISTER")) {
                 register();
-            } else if (choice.equals("Quit")) {
+            } else if (choice.equals("QUIT")) {
                 quit();
-            } else if (choice.equals("Help")) {
+            } else if (choice.equals("HELP")) {
                 help();
             } else {
                 System.out.println("Invalid command. Try again");
