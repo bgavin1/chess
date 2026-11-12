@@ -78,7 +78,10 @@ public class ServerFacade {
             } else if (response.statusCode() == 401){
                 throw new RuntimeException("Username already taken");
             } else {
-                throw new RuntimeException("Server error");
+                throw new RuntimeException(
+                        "Status: " + response.statusCode() +
+                                " Body: " + response.body()
+                );
             }
         } catch (IOException | InterruptedException e) {
             throw new RuntimeException(e);
@@ -88,8 +91,6 @@ public class ServerFacade {
     public void logout(String authToken) {
         try {
             URI uri = URI.create(serverAddress + "/session");
-
-
 
             HttpRequest request = HttpRequest.newBuilder()
                     .uri(uri)
@@ -197,7 +198,6 @@ public class ServerFacade {
     }
 
     public void observeGame(int gameID) {
-
     }
 
 
