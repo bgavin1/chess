@@ -11,6 +11,7 @@ import org.junit.jupiter.api.*;
 import server.Server;
 import ui.ServerFacade;
 
+
 import static org.junit.jupiter.api.Assertions.*;
 
 
@@ -97,4 +98,68 @@ public class ServerFacadeTests {
         });
     }
 
+    @Test
+    void badRegisterTest() {
+        assertThrows(RuntimeException.class, () -> {
+            serverFacade.register(null, "password", null);
+        });    }
+
+    @Test
+    void badLogoutTest() {
+        assertThrows(RuntimeException.class, () -> {
+            serverFacade.logout(null);
+        });
+    }
+
+    @Test
+    void badCreateGameTest() {
+        serverFacade.register("player1", "password", "p1@email.com");
+        serverFacade.login("player1", "password");
+        assertThrows(RuntimeException.class, () -> {
+            serverFacade.createGame(null, null);
+        });
+    }
+
+    @Test
+    void badListGameTest() {
+        serverFacade.register("player1", "password", "p1@email.com");
+        serverFacade.login("player1", "password");
+        assertThrows(RuntimeException.class, () -> {
+            serverFacade.listGames(null);
+        });
+    }
+
+    @Test
+    void badPlayGameTest() {
+        serverFacade.register("player1", "password", "p1@email.com");
+        LoginResult result = serverFacade.login("player1", "password");
+        String authToken = result.authToken();
+        CreateGameResult gameResult = serverFacade.createGame("myGame", authToken);
+        Integer gameID = gameResult.gameID();
+        serverFacade.playGame("WHITE", gameID, authToken);
+        assertThrows(RuntimeException.class, () -> {
+            serverFacade.playGame("WHITE", gameID, authToken);
+        });
+    }
+
+    @Test
+    void badPlayGameTest2() {
+        serverFacade.register("player1", "password", "p1@email.com");
+        LoginResult result = serverFacade.login("player1", "password");
+        String authToken = result.authToken();
+        CreateGameResult gameResult = serverFacade.createGame("myGame", authToken);
+        Integer gameID = gameResult.gameID();
+        serverFacade.playGame("WHITE", gameID, authToken);
+        assertThrows(RuntimeException.class, () -> {
+            serverFacade.playGame(null, gameID, authToken);
+        });
+    }
+
+    @Test
+    void badRegisterTest2() {
+        RegisterResult result = serverFacade.register("player1", "password", "p1@email.com");
+        assertThrows(RuntimeException.class, () -> {
+            serverFacade.register("player1", "password", "p1@email.com");
+        });
+    }
 }
