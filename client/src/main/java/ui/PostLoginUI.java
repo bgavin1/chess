@@ -138,6 +138,7 @@ public class PostLoginUI {
 
     public void observeGame() {
         try {
+            ChessGame game = new ChessGame();
             ListGamesResult result = listGames();
             System.out.println("What number is your game in the list? ");
             int number = Integer.parseInt(scanner.nextLine());
@@ -147,6 +148,8 @@ public class PostLoginUI {
 
             serverFacade.observeGame(gameID);
             System.out.println("Game selected: " + games.get(number - 1).gameName());
+            drawBoard(game.getBoard(), ChessGame.TeamColor.WHITE);
+
         } catch (RuntimeException e) {
             System.out.println("Failure to observe game: invalid list number chosen");
 

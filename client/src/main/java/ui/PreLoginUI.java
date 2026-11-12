@@ -19,7 +19,7 @@ public class PreLoginUI {
 
     public void run() {
         String choice = "";
-        while (!choice.equals("Quit")) {
+        while (!choice.equals("QUIT")) {
             System.out.println("Welcome!");
             System.out.println("Please enter a command:");
             System.out.println("- Help");

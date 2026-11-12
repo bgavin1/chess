@@ -12,7 +12,6 @@ public class ClientMain {
         final Scanner scanner = new Scanner(System.in);
         PreLoginUI preLoginUI = new PreLoginUI(serverFacade, scanner);
         preLoginUI.run();
-        var piece = new ChessPiece(ChessGame.TeamColor.WHITE, ChessPiece.PieceType.PAWN);
-        System.out.println("♕ 240 Chess Client: " + piece);
+
     }
 }
