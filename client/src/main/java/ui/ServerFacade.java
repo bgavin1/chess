@@ -21,13 +21,11 @@ public class ServerFacade {
     }
 
     public LoginResult login(String username, String password) {
-
         try {
             URI uri = URI.create(serverAddress + "/session");
             LoginRequest loginRequest = new LoginRequest(username, password);
             Gson gson = new Gson();
             String json = gson.toJson(loginRequest);
-
 
             HttpRequest request = HttpRequest.newBuilder()
                     .uri(uri)
@@ -50,8 +48,6 @@ public class ServerFacade {
         } catch (IOException | InterruptedException e) {
             throw new RuntimeException(e);
         }
-
-
     }
 
     public RegisterResult register(String username, String password, String email) {
@@ -60,7 +56,6 @@ public class ServerFacade {
             RegisterRequest registerRequest = new RegisterRequest(username, password, email);
             Gson gson = new Gson();
             String json = gson.toJson(registerRequest);
-
 
             HttpRequest request = HttpRequest.newBuilder()
                     .uri(uri)
