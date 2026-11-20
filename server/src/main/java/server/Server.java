@@ -13,6 +13,7 @@ import dataaccess.sql.MySqlAuthDAO;
 import dataaccess.sql.MySqlDataAccess;
 import dataaccess.sql.MySqlGameDAO;
 import dataaccess.sql.MySqlUserDAO;
+import websocket.WebSocketHandler;
 
 import java.sql.SQLException;
 import java.util.Map;
@@ -25,6 +26,7 @@ public class Server {
     private final MySqlGameDAO mySqlGameDAO = new MySqlGameDAO();
     private final MySqlUserDAO mySqlUserDAO = new MySqlUserDAO();
     private final MySqlAuthDAO mySqlAuthDAO = new MySqlAuthDAO();
+    private final WebSocketHandler webSocketHandler = new WebSocketHandler();
 
 
     public Server() {
@@ -38,6 +40,18 @@ public class Server {
         gameService = new GameService(mySqlGameDAO, mySqlAuthDAO);
 
         // Register your endpoints and exception handlers here.
+        javalin.ws("/ws", ws -> {
+            ws.onConnect(ctx -> {
+
+            });
+            ws.onMessage(ctx -> {
+
+            });
+            ws.onClose(ctx -> {
+
+            });
+        });
+
         javalin.delete("/db", ctx -> {
             mySqlUserDAO.clear();
             mySqlGameDAO.clear();
