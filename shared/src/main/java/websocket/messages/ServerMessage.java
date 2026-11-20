@@ -1,5 +1,7 @@
 package websocket.messages;
 
+import chess.ChessGame;
+
 import java.util.Objects;
 
 /**
@@ -10,6 +12,9 @@ import java.util.Objects;
  */
 public class ServerMessage {
     ServerMessageType serverMessageType;
+    ChessGame game;
+    String errorMessage;
+    String message;
 
     public enum ServerMessageType {
         LOAD_GAME,
@@ -21,9 +26,33 @@ public class ServerMessage {
         this.serverMessageType = type;
     }
 
+    public ServerMessage(ServerMessageType type, ChessGame game) {
+        this.serverMessageType = type;
+        this.game = game;
+    }
+
+    public ServerMessage(ServerMessageType type, String text) {
+        this.serverMessageType = type;
+        if (type == ServerMessageType.NOTIFICATION) {
+            this.message = text;
+        } else if (type == ServerMessageType.ERROR) {
+            this.errorMessage = text;
+        } else {
+            throw new IllegalArgumentException("Unsupported message type");
+        }
+    }
+
+
+
     public ServerMessageType getServerMessageType() {
         return this.serverMessageType;
     }
+
+    public ChessGame getGame() { return game;}
+
+    public String getErrorMessage() { return errorMessage;}
+
+    public String getMessage() { return message;}
 
     @Override
     public boolean equals(Object o) {
