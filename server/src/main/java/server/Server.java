@@ -42,13 +42,13 @@ public class Server {
         // Register your endpoints and exception handlers here.
         javalin.ws("/ws", ws -> {
             ws.onConnect(ctx -> {
-
+                webSocketHandler.onConnect(ctx);
             });
             ws.onMessage(ctx -> {
-
+                webSocketHandler.onMessage(ctx);
             });
             ws.onClose(ctx -> {
-
+                webSocketHandler.onClose(ctx);
             });
         });
 
